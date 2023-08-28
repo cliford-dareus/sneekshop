@@ -40,7 +40,30 @@ export const siteConfig = {
       ],
     },
     {
-      title: "new arrival",
+      title: "clothings",
+      items: [
+        {
+          title: "Top",
+          href: "/clothing",
+          desciption: "",
+          items: [],
+        },
+        {
+          title: "Bottom",
+          href: "/clothing",
+          desciption: "",
+          items: [],
+        },
+        {
+          title: "Jeans",
+          href: "/clothing",
+          desciption: "",
+          items: [],
+        },
+      ],
+    },
+    {
+      title: "shoes",
       items: [
         {
           title: "Clothing",
@@ -51,15 +74,15 @@ export const siteConfig = {
       ],
     },
     {
-        title: 'categories',
-        items: [
-            {
-                title: "Clothing",
-                href: "/clothing",
-                desciption: "",
-                items: [],
-            }
-        ]
-    }
+      title: "accessories",
+      items: [
+        {
+          title: "Clothing",
+          href: "/clothing",
+          desciption: "",
+          items: [],
+        },
+      ],
+    },
   ] satisfies MainNavItem[],
 };
