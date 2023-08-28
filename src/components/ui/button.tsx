@@ -1,10 +1,17 @@
-import React from 'react'
+import classNames from 'classnames'
+import React, { ReactNode } from 'react'
 
-type Props = {}
+type Props = {
+  children: ReactNode
+  className: string
+  onclick?: () => any
+}
 
-const Button = (props: Props) => {
+const Button = ({children, className, onclick}: Props) => {
   return (
-    <div>button</div>
+    <div className={classNames('flex py-[5px] px-4 cursor-pointer', className) } onClick={onclick}>
+      {children}
+    </div>
   )
 }
 
