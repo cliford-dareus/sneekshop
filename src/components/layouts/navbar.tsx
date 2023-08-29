@@ -22,8 +22,8 @@ const Navbar = (props: Props) => {
           <Dropdown items={siteConfig.mainNav} index={2} />
         </li>
 
-        <li>
-          <Link href="/">PRODUCTS</Link>
+        <li className="relative">
+          <Dropdown items={siteConfig.mainNav} index={3} />
         </li>
       </ul>
     </nav>

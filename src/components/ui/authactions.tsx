@@ -30,7 +30,7 @@ const Authactions = (props: Props) => {
               .map((x) => x.slice(0, 1).toUpperCase())}
           </p>
         ) : (
-          ""
+          <div className="w-[35px] h-[35px] rounded-full bg-slate-800 flex items-center justify-center"></div>
         )}
       </div>
     </div>

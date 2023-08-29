@@ -17,7 +17,14 @@
   }
 }
 
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   color: rgb(var(--text-rgb));
   background: rgb(var(--foreground-rgb));
+  overflow-x: hidden;
 }
