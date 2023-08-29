@@ -20,8 +20,8 @@ const page = (props: Props) => {
       </div>
 
       <div className="grid grid-cols-4 gap-4 mt-4">
-        {new Array(16).fill(0).map((i) => (
-          <div className="bg-slate-900 h-[350px]"></div>
+        {Array(16).fill(0).map((i) => (
+          <div key={i}></div>
         ))}
       </div>
     </div>

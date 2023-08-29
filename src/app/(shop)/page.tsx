@@ -1,12 +1,13 @@
 import Button from "@/components/ui/button";
-import React from "react";
+import Cards from "@/components/ui/cards";
+import Carousel from "@/components/ui/carousel";
 
 type Props = {};
 
-const LandingPage = async (props: Props) => {
+const LandingPage = (props: Props) => {
   return (
     <section>
-      <section className="max-w-[64rem] mx-auto h-[700px] flex flex-col justify-center items-center">
+      <section className="max-w-[64rem] mx-auto h-[70vh] flex flex-col justify-center items-center">
         <div className="flex flex-col items-center justify-center gap-2 ">
           <div className="text-6xl text-center font-koulen flex items-center gap-2">
             <h1>UPGRAGE YOUR STYLE GAME </h1>
@@ -52,7 +53,9 @@ const LandingPage = async (props: Props) => {
             </div>
           </div>
 
-          <div></div>
+          <div>
+            <Carousel />
+          </div>
         </div>
       </section>
 
@@ -73,17 +76,7 @@ const LandingPage = async (props: Props) => {
         <div className="">
           <div className="grid grid-cols-4 gap-4">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div key={i} className="shadow-sm shadow-slate-800 rounded-md">
-                <div className="h-[300px] bg-slate-800 rounded-md"></div>
-                <div className="flex items-center justify-between pt-4">
-                  <div className="">
-                    <p>PRODUCT NAME</p>
-                    <span>PRICE</span>
-                  </div>
-
-                  <Button className="bg-red-600">BUY</Button>
-                </div>
-              </div>
+              <Cards key={i}/>
             ))}
           </div>
           <div className="flex mt-8 justify-end cursor-pointer">

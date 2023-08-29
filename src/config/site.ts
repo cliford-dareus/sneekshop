@@ -8,7 +8,7 @@ interface navItemProp {
   desciption?: string;
 }
 
-interface NavItem extends navItemProp {
+export interface NavItem extends navItemProp {
   items?: NavItem[];
 }
 

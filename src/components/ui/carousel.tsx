@@ -2,6 +2,7 @@
 import React, { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Button from "./button";
+import Cards from "./cards";
 
 type Props = {};
 
@@ -21,9 +22,7 @@ const Carousel = (props: Props) => {
       <div className="overflow-hidden flex-1 mt-4" ref={emblaRef}>
         <div className="flex gap-4 h-full ">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div className="flex-[0_0_25%] bg-slate-500 mr-[10px] h-[450px]">
-              Slide {i}
-            </div>
+            <Cards className="flex-[0_0_25%]"  key={i}/>
           ))}
         </div>
       </div>
