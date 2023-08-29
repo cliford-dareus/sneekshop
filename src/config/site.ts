@@ -1,3 +1,5 @@
+import { ProductCategories } from "./products";
+
 export type SiteConfig = typeof siteConfig;
 
 interface navItemProp {
@@ -20,69 +22,43 @@ export const siteConfig = {
       title: "shop",
       items: [
         {
-          title: "Clothing",
-          href: "/clothing",
+          title: "Products",
+          href: "/products",
           desciption: "",
           items: [],
         },
         {
-          title: "accessories",
-          href: "/accessories",
+          title: "Collections",
+          href: "/collections",
           desciption: "",
           items: [],
         },
         {
-          title: "sneakers",
-          href: "/sneakers",
+          title: "Sales",
+          href: "/slales",
           desciption: "",
           items: [],
         },
       ],
     },
-    {
-      title: "clothings",
+    ...ProductCategories.map((category) => ({
+      title: category.category,
       items: [
         {
-          title: "Top",
-          href: "/clothing",
-          desciption: "",
+          title: "All",
+          href: `/categories/${category.category.toLowerCase()}`,
+          description: `All ${category.category}.`,
           items: [],
         },
-        {
-          title: "Bottom",
-          href: "/clothing",
-          desciption: "",
+        ...category.subCategories.map((subcategory) => ({
+          title: subcategory.title,
+          href: `/categories/${category.category.toLowerCase()}/${
+            subcategory.slug
+          }`,
+          description: subcategory.description,
           items: [],
-        },
-        {
-          title: "Jeans",
-          href: "/clothing",
-          desciption: "",
-          items: [],
-        },
+        })),
       ],
-    },
-    {
-      title: "shoes",
-      items: [
-        {
-          title: "Clothing",
-          href: "/clothing",
-          desciption: "",
-          items: [],
-        },
-      ],
-    },
-    {
-      title: "accessories",
-      items: [
-        {
-          title: "Clothing",
-          href: "/clothing",
-          desciption: "",
-          items: [],
-        },
-      ],
-    },
+    })),
   ] satisfies MainNavItem[],
 };
