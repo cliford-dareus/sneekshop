@@ -1,9 +1,9 @@
 import Button from "@/components/ui/button";
-import React from "react";
+import Carousel from "@/components/ui/carousel";
 
 type Props = {};
 
-const LandingPage = async (props: Props) => {
+const LandingPage = (props: Props) => {
   return (
     <section>
       <section className="max-w-[64rem] mx-auto h-[70vh] flex flex-col justify-center items-center">
@@ -26,13 +26,10 @@ const LandingPage = async (props: Props) => {
         </div>
       </section>
 
-      <section className="h-[100vh] bg-[#232323]">
-        <div className="container py-4">
+      <section className=" bg-[#232323]">
+        <div className="container py-8 h-full flex flex-col">
           <h2 className="font-koulen text-3xl">NEW ARRIVALS</h2>
-
-          <div>
-            
-          </div>
+          <Carousel />
         </div>
       </section>
     </section>

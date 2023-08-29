@@ -8,6 +8,7 @@ import { InputProps } from "./signupForm";
 import { useMutation } from "@tanstack/react-query";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Button from "../ui/button";
 
 type Props = {};
 
@@ -43,7 +44,7 @@ const LoginForm = (props: Props) => {
       onSubmit={handleSubmit((formdata: InputProps) =>
         mutation.mutate(formdata)
       )}
-      className="flex flex-col"
+      className="flex flex-col gap-2"
     >
       <div className="w-full flex flex-col">
         <Label name="Name" />
@@ -79,7 +80,8 @@ const LoginForm = (props: Props) => {
           errors={errors}
         />
       </div>
-      <button>Sign Up</button>
+
+      <Button className="w-full flex items-center justify-center bg-red-600 mt-2">Sign In</Button>
     </form>
   );
 };
