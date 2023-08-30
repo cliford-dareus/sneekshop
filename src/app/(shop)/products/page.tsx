@@ -1,6 +1,4 @@
-import Filter from "@/components/filter";
 import ProductItems from "@/components/productItems";
-import { ArrowDownWideNarrow, ChevronDown } from "lucide-react";
 import React from "react";
 
 type Props = {
@@ -28,7 +26,7 @@ const DummyProducts = [
   },
 ];
 
-const Products = ({searchParams}: Props) => {
+const Products = async ({searchParams}: Props) => {
   const {
     page,
     per_page,
@@ -39,8 +37,8 @@ const Products = ({searchParams}: Props) => {
     store_ids,
     store_page,
   } = searchParams ?? {};
-  
-  // console.log(categories);
+  const pageCount = 8
+
 
   return (
     <section className="container py-4">
@@ -48,10 +46,7 @@ const Products = ({searchParams}: Props) => {
         <h1 className="text-3xl font-koulen">Products</h1>
         <p className="">Lorem ipsum dolor sit amet, adipisicing elit.</p>
       </div>
-
-      <ProductItems />
-
-      <div className="h-16 mt-4">pagination</div>
+      <ProductItems pageCount={pageCount}/>
     </section>
   );
 };
