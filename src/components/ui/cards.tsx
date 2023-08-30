@@ -1,6 +1,7 @@
 import React from 'react'
 import Button from './button';
 import classNames from 'classnames';
+import { ShoppingBasket } from 'lucide-react';
 
 
 type Props = {
@@ -9,15 +10,19 @@ type Props = {
 
 const Cards = ({className}: Props) => {
   return (
-    <div className={classNames('hadow-sm shadow-slate-800 rounded-md', className)}>
-      <div className="h-[300px] bg-slate-800 rounded-md"></div>
-      <div className="flex items-center justify-between pt-4">
-        <div className="">
-          <p>PRODUCT NAME</p>
-          <span>PRICE</span>
+    <div
+      className={classNames("shadow-sm shadow-slate-800 rounded-md", className)}
+    >
+      <div className="h-[300px] bg-slate-800 rounded-md relative">
+        <Button className="bg-red-600 absolute bottom-4 right-4 rounded-md">
+          <ShoppingBasket />
+        </Button>
+      </div>
+      <div className="flex items-center pt-4 cursor-pointer">
+        <div className="text-[.8rem]">
+          <p className=''>PRODUCT NAME</p>
+          <span className=''>PRICE</span>
         </div>
-
-        <Button className="bg-red-600">BUY</Button>
       </div>
     </div>
   );

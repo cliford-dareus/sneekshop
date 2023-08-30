@@ -48,7 +48,7 @@ export const ProductCategories = [
         title: "Slides",
         description: "",
         slug: "pants",
-      }
+      },
     ],
   },
   {
@@ -73,7 +73,46 @@ export const ProductCategories = [
         title: "Belts",
         description: "",
         slug: "pants",
-      }
+      },
     ],
   },
 ];
+
+export const productsTags = [
+  "best Seller",
+  "featured ",
+  "sale",
+  "popular",
+  "new",
+  "trending",
+];
+
+export const productsSizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+
+export const productsColors = [
+  "Black",
+  "Red",
+  "Yellow",
+  "White",
+  "Gray",
+  "Pink",
+];
+
+export const sortOptions = [
+  { label: "Date: Old to new", value: "createdAt.asc" },
+  {
+    label: "Date: New to old",
+    value: "createdAt.desc",
+  },
+  { label: "Price: Low to high", value: "price.asc" },
+  { label: "Price: High to low", value: "price.desc" },
+  {
+    label: "Alphabetical: A to Z",
+    value: "name.asc",
+  },
+  {
+    label: "Alphabetical: Z to A",
+    value: "name.desc",
+  },
+];
+
