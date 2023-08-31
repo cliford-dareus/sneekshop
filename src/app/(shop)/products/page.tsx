@@ -1,5 +1,6 @@
 import ProductItems from "@/components/productItems";
-import React from "react";
+import prisma from "@/libs/prismaDB";
+import { $Enums, Prisma, Product } from "@prisma/client";
 
 type Props = {
   searchParams: {
@@ -7,26 +8,7 @@ type Props = {
   };
 };
 
-const DummyProducts = [
-  {
-    title: "red shirts",
-    price: 100,
-    inventory: 500,
-    description: "",
-    category: "clothing",
-    subCategory: "Tops",
-  },
-  {
-    title: "red pants",
-    price: 100,
-    inventory: 500,
-    description: "",
-    category: "clothing",
-    subCategory: "Bottoms",
-  },
-];
-
-const Products = async ({searchParams}: Props) => {
+const Products = async ({ searchParams }: Props) => {
   const {
     page,
     per_page,
@@ -37,8 +19,61 @@ const Products = async ({searchParams}: Props) => {
     store_ids,
     store_page,
   } = searchParams ?? {};
-  const pageCount = 8
+  
 
+  const limit = typeof per_page === "string" ? parseInt(per_page) : 8;
+  const offset = typeof page === "string" ? (parseInt(page) - 1) * limit : 0;
+  const pricerange = typeof price_range === "string" ? price_range : null;
+
+  // console.log(price_range)
+
+  const getProductsAction = async () => {
+    return await prisma.$transaction(async (ctx) => {
+      const [min, max] = (pricerange?.split("-") as [string, string]) ?? [
+        0, 1000,
+      ];
+      const category = categories as $Enums.Category;
+      const subCategory = subcategories as any;
+
+      // console.log(min, max);
+
+      const items = await ctx.product.findMany({
+        take: limit,
+        skip: offset,
+        orderBy: { title: "asc" },
+        where: {
+          AND: {
+            category,
+            subCategory,
+            price: {
+              gte: Number(min),
+              lte: Number(max),
+            },
+          },
+        },
+      });
+
+      const len = await ctx.product.count({
+        where: {
+          AND: {
+            category,
+            subCategory,
+            price: {
+              gte: Number(min),
+              lte: Number(max),
+            },
+          },
+        },
+      });
+
+      return [items, len];
+    });
+  };
+
+  const [items, len] = await getProductsAction();
+  const pageCount = Math.ceil(len as number / limit);
+
+  // console.log(items, len);
 
   return (
     <section className="container py-4">
@@ -46,7 +81,9 @@ const Products = async ({searchParams}: Props) => {
         <h1 className="text-3xl font-koulen">Products</h1>
         <p className="">Lorem ipsum dolor sit amet, adipisicing elit.</p>
       </div>
-      <ProductItems pageCount={pageCount}/>
+
+      {/* {JSON.stringify(items)} */}
+      <ProductItems pageCount={pageCount} items={items as Product[]}/>
     </section>
   );
 };

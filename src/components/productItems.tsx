@@ -4,6 +4,7 @@ import React from "react";
 import Cards from "./ui/cards";
 import Button from "./ui/button";
 import classNames from "classnames";
+import { Product } from "@prisma/client";
 import DoubleThumbSlider from "./ui/slider";
 import Pagination from "./pageUI/pagination";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -14,9 +15,10 @@ import { ArrowDownWideNarrow, ChevronDown, ListFilter, X } from "lucide-react";
 
 type Props = {
   pageCount: number;
+  items: Product[]
 };
 
-const ProductItems = ({ pageCount }: Props) => {
+const ProductItems = ({ pageCount, items }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -223,11 +225,10 @@ const ProductItems = ({ pageCount }: Props) => {
       </div>
 
       <div className="grid grid-cols-4 gap-4 mt-4">
-        {new Array(20)
-          .fill(0)
+        {items
           .slice(0, 12)
-          .map((i, j) => (
-            <Cards className="" key={i} />
+          .map((item) => (
+            <Cards className="" key={item.id} item={item}/>
           ))}
       </div>
 
