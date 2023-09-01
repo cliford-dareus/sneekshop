@@ -1,4 +1,4 @@
-import { CartItemsDetails } from "@/app/_actions";
+import { CartItemsDetails } from "@/app/_actions/cart";
 import { CartItems } from "@/libs/type";
 import React, { useMemo } from "react";
 
@@ -22,7 +22,7 @@ const CartSummary = ({ cartItems, cartItemsDetails }: Props) => {
             id: cartItems[j].id,
             title: cartItemsDetails[i].title,
             price: cartItemsDetails[i].price * cartItems[j].quantity,
-            quantity: cartItems[j].quantity
+            quantity: cartItems[j].quantity,
           };
           newCartItems.push(product);
         }

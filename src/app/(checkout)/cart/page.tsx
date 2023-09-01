@@ -1,4 +1,4 @@
-import { getCart } from "@/app/_actions";
+import { getCart } from "@/app/_actions/cart";
 import CartLineItems from "@/components/checkout/cardLineItems";
 import CartSummary from "@/components/checkout/cart-summary";
 import Button from "@/components/ui/button";
@@ -16,7 +16,7 @@ const Cart = async ({}: Props) => {
       <h1 className="text-2xl font-koulen">Shopping Cart</h1>
 
       <div className="flex gap-4 mt-4">
-        {cartItemsDetails.length? (
+        {cartItemsDetails.length ? (
           <div className="flex-1 py-4 border rounded-md border-slate-800 shadow-md">
             {uniqueSellerId.map((sellerId, i) => (
               <div key={i} className="p-4 rounded-md text-white">
@@ -51,18 +51,20 @@ const Cart = async ({}: Props) => {
           </div>
         )}
 
-        {cartItems.length && <aside className="p-4 w-[300px] lg:w-[400px] bg-slate-800 rounded-md">
-          <Button className="bg-red-600 w-full rounded-full flex justify-center items-center">
-            Proceed To Checkout
-          </Button>
+        {cartItems.length && (
+          <aside className="p-4 w-[300px] lg:w-[400px] bg-slate-800 rounded-md">
+            <Button className="bg-red-600 w-full rounded-full flex justify-center items-center">
+              Proceed To Checkout
+            </Button>
 
-          <h4 className="mt-4 font-koulen">Price Details</h4>
-          <CartSummary
-            cartItems={cartItems}
-            cartItemsDetails={cartItemsDetails}
-          />
-          <h4></h4>
-        </aside>}
+            <h4 className="mt-4 font-koulen">Price Details</h4>
+            <CartSummary
+              cartItems={cartItems}
+              cartItemsDetails={cartItemsDetails}
+            />
+            <h4></h4>
+          </aside>
+        )}
       </div>
     </div>
   );

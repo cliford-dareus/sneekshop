@@ -2,7 +2,7 @@
 import type { Product } from "@prisma/client";
 import { Minus, Plus, X } from "lucide-react";
 import Button from "../ui/button";
-import { updateCartItem } from "@/app/_actions";
+import { updateCartItem } from "@/app/_actions/cart";
 
 type Props = {
   cartItems: { id: string; quantity: number }[];
