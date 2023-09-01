@@ -1,5 +1,6 @@
 import { getCart } from "@/app/_actions";
 import CartLineItems from "@/components/checkout/cardLineItems";
+import CartSummary from "@/components/checkout/cart-summary";
 import Button from "@/components/ui/button";
 import { Store } from "lucide-react";
 import { cookies } from "next/headers";
@@ -10,31 +11,12 @@ const Cart = async ({}: Props) => {
   const cartId = cookieStore.get("cartId")?.value;
   const [cartItems, cartItemsDetails, uniqueSellerId] = await getCart(cartId);
 
-  const totalItemsInCart = cartItems.reduce(
-    (acc, item) => acc + item.quantity,
-    0
-  );
-
-  const itemsInCartWithQuantity = cartItems.reduce((acc, item) => {
-    acc = [
-      ...cartItemsDetails.map((i) => {
-        return {
-          id: item.id,
-          title: i.title,
-          quantity: item.quantity,
-          price: i.price * item.quantity,
-        };
-      }),
-    ];
-    return acc;
-  }, []);
-
   return (
     <div className="h-screen container py-4">
       <h1 className="text-2xl font-koulen">Shopping Cart</h1>
 
       <div className="flex gap-4 mt-4">
-        {cartItemsDetails.length !== 0 ? (
+        {cartItemsDetails.length? (
           <div className="flex-1 py-4 border rounded-md border-slate-800 shadow-md">
             {uniqueSellerId.map((sellerId, i) => (
               <div key={i} className="p-4 rounded-md text-white">
@@ -55,7 +37,7 @@ const Cart = async ({}: Props) => {
                   <span>
                     {
                       cartItemsDetails?.find(
-                        (item) => item.sellerId === sellerId.id
+                        (item) => item.sellerId === sellerId
                       )?.seller.name
                     }
                   </span>
@@ -69,36 +51,18 @@ const Cart = async ({}: Props) => {
           </div>
         )}
 
-        <aside className="p-4 w-[300px] bg-slate-800 rounded-md">
-          <Button className="bg-red-600 w-full rounded-full">
+        {cartItems.length && <aside className="p-4 w-[300px] lg:w-[400px] bg-slate-800 rounded-md">
+          <Button className="bg-red-600 w-full rounded-full flex justify-center items-center">
             Proceed To Checkout
           </Button>
 
           <h4 className="mt-4 font-koulen">Price Details</h4>
-          <div className="mt-2 border border-slate-600 p-4 rounded-md">
-            <p>{totalItemsInCart} item</p>
-            {itemsInCartWithQuantity &&
-              itemsInCartWithQuantity.map(
-                (item: {
-                  id: string;
-                  title: string;
-                  quantity: number;
-                  price: number;
-                }) => (
-                  <div
-                    key={item?.id}
-                    className="flex items-center gap-4 w-full text-[.8rem]"
-                  >
-                    <p>{item?.quantity}</p>
-                    <p>{item?.title}</p>
-                    <p className="ml-auto">$ {item?.price}</p>
-                  </div>
-                )
-              )}
-          </div>
-
+          <CartSummary
+            cartItems={cartItems}
+            cartItemsDetails={cartItemsDetails}
+          />
           <h4></h4>
-        </aside>
+        </aside>}
       </div>
     </div>
   );

@@ -59,6 +59,30 @@ const LandingPage = (props: Props) => {
         </div>
       </section>
 
+      <section className=" mt-[4em] container">
+        <h2 className="text-3xl font-koulen">YOUR RECENTLY VIEWED ITEMS</h2>
+        <p className="">Lorem ipsum dolor sit amet consectetur.</p>
+
+        <div className="flex mt-8 justify-end cursor-pointer">
+          <div className="flex gap-4">
+            <p className="font-koulen">View all</p>
+            <svg
+              width="49"
+              height="16"
+              viewBox="0 0 49 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 13C3.70732 13 28.2114 13 40 13L27.3171 3"
+                stroke="white"
+                stroke-width="6"
+              />
+            </svg>
+          </div>
+        </div>
+      </section>
+
       <section className="h-[300px] mt-[4em] container">
         <div className="bg-slate-500 w-full h-full"></div>
       </section>
@@ -76,7 +100,7 @@ const LandingPage = (props: Props) => {
         <div className="">
           <div className="grid grid-cols-4 gap-4">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <Cards key={i}/>
+              <Cards className="" key={i}/>
             ))}
           </div>
           <div className="flex mt-8 justify-end cursor-pointer">

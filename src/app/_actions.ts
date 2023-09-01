@@ -3,9 +3,10 @@
 import prisma from "@/libs/prismaDB";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import type { CartItems } from "@/libs/type";
 
 // ADD NEW ITEM TO EXISTING CART OR CREATE THE CART
-export const addToCard = async (item: { id: string; quantity: number }) => {
+export const addToCard = async (item: CartItems) => {
   const cookieStore = cookies();
   const cartId = cookieStore.get("cartId")?.value;
 
@@ -15,7 +16,7 @@ export const addToCard = async (item: { id: string; quantity: number }) => {
     },
   });
 
-  if (cartItems.length !== 0) {
+  if (cartItems.length) {
     const itemInCart = JSON.parse(cartItems[0]?.items as string) as {
       id: string;
       quantity: number;
@@ -71,10 +72,7 @@ export const getCart = async (cartId: string | undefined) => {
     },
   });
 
-  const cartItems = JSON.parse(cart[0].items as string) as {
-    id: string;
-    quantity: number;
-  }[];
+  const cartItems = JSON.parse(cart[0].items as string) as CartItems[];
   const cartItemsDetails = await getCartItemsDetails(cartId, cartItems);
 
   const uniqueSellerId = [
@@ -85,10 +83,7 @@ export const getCart = async (cartId: string | undefined) => {
 };
 
 // UPDATE CART ITEMS
-export const updateCartItem = async (item: {
-  id: string;
-  quantity: number;
-}) => {
+export const updateCartItem = async (item: CartItems) => {
   const cartId = cookies().get("cartId")?.value;
   if (!cartId) return;
 
@@ -98,10 +93,7 @@ export const updateCartItem = async (item: {
     },
   });
 
-  const itemInCart = JSON.parse(cartItems[0]?.items as string) as {
-    id: string;
-    quantity: number;
-  }[];
+  const itemInCart = JSON.parse(cartItems[0]?.items as string) as CartItems[];
 
   const cartItemsWithOutPassInItem = itemInCart.filter((i) => i.id !== item.id);
 
@@ -133,15 +125,15 @@ export const updateCartItem = async (item: {
   revalidatePath("/");
 };
 
-export const deleteCartItems = async () => {};
+// CLEAR CART
+export const clearCart = async (item: CartItems) => {
+
+};
 
 // GET PRODUCT DETAILS FOR CART ITEMS
 export const getCartItemsDetails = async (
   cartId: string | undefined,
-  cartItems: {
-    id: string;
-    quantity: number;
-  }[]
+  cartItems: CartItems[]
 ) => {
   if (!cartId) return [];
   const productIds = cartItems.map((item) => item.id);
@@ -164,3 +156,5 @@ export const getCartItemsDetails = async (
 
   return productDetails;
 };
+
+export type CartItemsDetails = Awaited<ReturnType<typeof getCartItemsDetails>>;

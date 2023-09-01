@@ -1,6 +1,6 @@
 "use client";
 import type { Product } from "@prisma/client";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, X } from "lucide-react";
 import Button from "../ui/button";
 import { updateCartItem } from "@/app/_actions";
 
@@ -12,16 +12,27 @@ type Props = {
 const CartLineItems = ({ cartItems, products }: Props) => {
   return (
     <>
-      {products.map((product) => {
+      {products.map((product, i) => {
         const currentProductInCart = cartItems.find(
           (item) => item.id === product.id
-        ) as { id: string; quantity: number};
+        ) as { id: string; quantity: number };
 
         return (
           <div
-            className="shadow-sm shadow-slate-800 rounded-md mt-2"
-            key={product.id}
+            className="shadow-sm shadow-slate-800 rounded-md mt-2 relative border border-slate-900 p-[2px]"
+            key={i}
           >
+            <Button
+              className="absolute right-0 top-0"
+              onclick={async () =>
+                await updateCartItem({
+                  id: currentProductInCart?.id,
+                  quantity: 0,
+                })
+              }
+            >
+              <X size={20} />
+            </Button>
             <div className="flex gap-4">
               <div className="w-[100px] h-[90px] bg-white rounded-md"></div>
               <div className="w-full flex flex-col">
@@ -69,3 +80,4 @@ const CartLineItems = ({ cartItems, products }: Props) => {
 };
 
 export default CartLineItems;
+// TODO: Add react usestransition calculations indication
