@@ -4,9 +4,11 @@ import prisma from "@/libs/prismaDB";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
+// ADD NEW ITEM TO EXISTING CART OR CREATE THE CART
 export const addToCard = async (item: { id: string; quantity: number }) => {
   const cookieStore = cookies();
   const cartId = cookieStore.get("cartId")?.value;
+
   const cartItems = await prisma.carts.findMany({
     where: {
       id: cartId,
@@ -57,6 +59,7 @@ export const addToCard = async (item: { id: string; quantity: number }) => {
   }
 };
 
+// GET CART
 export const getCart = async (cartId: string | undefined) => {
   const cart = await prisma.carts.findMany({
     where: {
@@ -75,12 +78,64 @@ export const getCart = async (cartId: string | undefined) => {
   const cartItemsDetails = await getCartItemsDetails(cartId, cartItems);
 
   const uniqueSellerId = [
-    ...(new Set(cartItemsDetails?.map((item) => item.seller)) as any),
+    ...(new Set(cartItemsDetails?.map((item) => item.seller.id)) as any),
   ];
 
   return [cartItems, cartItemsDetails, uniqueSellerId];
 };
 
+// UPDATE CART ITEMS
+export const updateCartItem = async (item: {
+  id: string;
+  quantity: number;
+}) => {
+  const cartId = cookies().get("cartId")?.value;
+  if (!cartId) return;
+
+  const cartItems = await prisma.carts.findMany({
+    where: {
+      id: cartId,
+    },
+  });
+
+  const itemInCart = JSON.parse(cartItems[0]?.items as string) as {
+    id: string;
+    quantity: number;
+  }[];
+
+  const cartItemsWithOutPassInItem = itemInCart.filter((i) => i.id !== item.id);
+
+  if (item.quantity > 0) {
+    await prisma.carts.update({
+      data: {
+        items:
+          cartItemsWithOutPassInItem.length !== 0
+            ? JSON.stringify([...cartItemsWithOutPassInItem, item])
+            : JSON.stringify([item]),
+      },
+      where: {
+        id: cartId,
+      },
+    });
+  } else {
+    await prisma.carts.update({
+      data: {
+        items:
+          cartItemsWithOutPassInItem.length !== 0 && cartItemsWithOutPassInItem
+            ? JSON.stringify(cartItemsWithOutPassInItem)
+            : JSON.stringify([]),
+      },
+      where: {
+        id: cartId,
+      },
+    });
+  }
+  revalidatePath("/");
+};
+
+export const deleteCartItems = async () => {};
+
+// GET PRODUCT DETAILS FOR CART ITEMS
 export const getCartItemsDetails = async (
   cartId: string | undefined,
   cartItems: {
@@ -101,7 +156,7 @@ export const getCartItemsDetails = async (
       seller: {
         select: {
           name: true,
-          id: true
+          id: true,
         },
       },
     },

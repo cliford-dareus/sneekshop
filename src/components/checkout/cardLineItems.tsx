@@ -1,4 +1,8 @@
-import { Product } from "@prisma/client";
+"use client";
+import type { Product } from "@prisma/client";
+import { Minus, Plus } from "lucide-react";
+import Button from "../ui/button";
+import { updateCartItem } from "@/app/_actions";
 
 type Props = {
   cartItems: { id: string; quantity: number }[];
@@ -11,11 +15,54 @@ const CartLineItems = ({ cartItems, products }: Props) => {
       {products.map((product) => {
         const currentProductInCart = cartItems.find(
           (item) => item.id === product.id
-        );
+        ) as { id: string; quantity: number};
 
-        return <div key={product.id}>
-            <div className=""></div>
-        </div>;
+        return (
+          <div
+            className="shadow-sm shadow-slate-800 rounded-md mt-2"
+            key={product.id}
+          >
+            <div className="flex gap-4">
+              <div className="w-[100px] h-[90px] bg-white rounded-md"></div>
+              <div className="w-full flex flex-col">
+                <>
+                  <p>{product.title}</p>
+                  <p>{product.tags}</p>
+                </>
+
+                <div className="flex justify-between items-center w-full mt-auto">
+                  <span>${product.price}</span>
+
+                  <div className="flex gap-2 items-center">
+                    <Button
+                      className="p-0"
+                      onclick={async () =>
+                        await updateCartItem({
+                          id: currentProductInCart?.id,
+                          quantity: currentProductInCart?.quantity - 1,
+                        })
+                      }
+                    >
+                      <Minus size={15} />
+                    </Button>
+                    <div>{currentProductInCart?.quantity}</div>
+                    <Button
+                      className="p-0"
+                      onclick={async () =>
+                        await updateCartItem({
+                          id: currentProductInCart?.id,
+                          quantity: currentProductInCart?.quantity + 1,
+                        })
+                      }
+                    >
+                      <Plus size={15} />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       })}
     </>
   );
