@@ -4,6 +4,7 @@ import prisma from "@/libs/prismaDB";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import type { CartItems } from "@/libs/type";
+import exp from "constants";
 
 // ADD NEW ITEM TO EXISTING CART OR CREATE THE CART
 export const addToCard = async (item: CartItems) => {
@@ -82,6 +83,30 @@ export const getCart = async (cartId: string | undefined) => {
   return [cartItems, cartItemsDetails, uniqueSellerId];
 };
 
+export const getCartLineItems = async (sellerId: string) => {
+  const cartId = cookies().get("cartId")?.value;
+
+  if (!cartId) return [];
+
+  const cart = await prisma.carts.findMany({
+    where: {
+      id: cartId,
+    },
+    select: {
+      items: true,
+    },
+  });
+
+  const cartItems = JSON.parse(cart[0]?.items as string) as CartItems[];
+  const productIds = cartItems.map((item) => item.id) ?? [];
+
+  if (productIds.length === 0) return [];
+
+  const uniqueProductIds = Array.from(new Set(productIds));
+
+  
+};
+
 // UPDATE CART ITEMS
 export const updateCartItem = async (item: CartItems) => {
   const cartId = cookies().get("cartId")?.value;
@@ -126,9 +151,7 @@ export const updateCartItem = async (item: CartItems) => {
 };
 
 // CLEAR CART
-export const clearCart = async (item: CartItems) => {
-
-};
+export const clearCart = async (item: CartItems) => {};
 
 // GET PRODUCT DETAILS FOR CART ITEMS
 export const getCartItemsDetails = async (

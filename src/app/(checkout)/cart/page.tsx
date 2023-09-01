@@ -1,9 +1,10 @@
-import { getCart } from "@/app/_actions/cart";
-import CartLineItems from "@/components/checkout/cardLineItems";
-import CartSummary from "@/components/checkout/cart-summary";
-import Button from "@/components/ui/button";
 import { Store } from "lucide-react";
 import { cookies } from "next/headers";
+import Link from "next/link";
+import Button from "@/components/ui/button";
+import { getCart } from "@/app/_actions/cart";
+import CartSummary from "@/components/checkout/cart-summary";
+import CartLineItems from "@/components/checkout/cardLineItems";
 type Props = {};
 
 const Cart = async ({}: Props) => {
@@ -30,17 +31,22 @@ const Cart = async ({}: Props) => {
                 />
 
                 <div className="flex mt-4 gap-4 items-center px-4 py-1 bg-slate-800 rounded-md">
-                  <span className="flex gap-1 items-center">
-                    <Store size={15} />
-                    Seller
-                  </span>
-                  <span>
-                    {
-                      cartItemsDetails?.find(
-                        (item) => item.sellerId === sellerId
-                      )?.seller.name
-                    }
-                  </span>
+                  <>
+                    <span className="flex gap-1 items-center">
+                      <Store size={15} />
+                      Seller
+                    </span>
+                    <span>
+                      {
+                        cartItemsDetails?.find(
+                          (item) => item.sellerId === sellerId
+                        )?.seller.name
+                      }
+                    </span>
+                  </>
+                  <Button className="ml-auto">
+                    <Link href={`checkout/${sellerId}`}>Checkout</Link>
+                  </Button>
                 </div>
               </div>
             ))}
@@ -54,6 +60,7 @@ const Cart = async ({}: Props) => {
         {cartItems.length && (
           <aside className="p-4 w-[300px] lg:w-[400px] bg-slate-800 rounded-md">
             <Button className="bg-red-600 w-full rounded-full flex justify-center items-center">
+              <Link href=""></Link>
               Proceed To Checkout
             </Button>
 
