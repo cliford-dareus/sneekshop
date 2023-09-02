@@ -22,7 +22,7 @@ const LandingPage = (props: Props) => {
         </div>
 
         <div className="flex gap-8 mt-8">
-          <Button className="border">BROWSE</Button>
+          <Button className="border">SELL NOW</Button>
           <Button className="bg-red-600">SHOP NOW</Button>
         </div>
       </section>

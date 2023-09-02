@@ -104,7 +104,15 @@ export const getCartLineItems = async (sellerId: string) => {
 
   const uniqueProductIds = Array.from(new Set(productIds));
 
-  
+  const products = await prisma.product.findMany({
+    select: {
+      id: true,
+      category: true,
+      description: true,
+      price: true,
+      sellerId: true
+    }
+  })
 };
 
 // UPDATE CART ITEMS
