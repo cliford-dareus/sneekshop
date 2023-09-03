@@ -1,6 +1,7 @@
 import Button from "@/components/ui/button";
 import Cards from "@/components/ui/cards";
 import Carousel from "@/components/ui/carousel";
+import Link from "next/link";
 
 type Props = {};
 
@@ -22,7 +23,11 @@ const LandingPage = (props: Props) => {
         </div>
 
         <div className="flex gap-8 mt-8">
-          <Button className="border">SELL NOW</Button>
+          <Button className="border">
+            <Link href='/dashboard/billing'>
+               SELL NOW
+            </Link>
+          </Button>
           <Button className="bg-red-600">SHOP NOW</Button>
         </div>
       </section>

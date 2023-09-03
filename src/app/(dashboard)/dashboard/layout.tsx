@@ -22,13 +22,15 @@ const DashboardLayout = async ({ children }: Props) => {
       <Siteheader />
       <main className="flex-1 container md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-4 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-6">
         <aside className="w-full h-[calc(100vh-60px)] sticky top-[60px]">
-          <div className="w-full py-4 h-[300px] bg-slate-800 mt-5 rounded-md p-4">
+          <div className="w-full py-4 h-[300px] bg-slate-800 mt-5 rounded-md p-4 flex flex-col">
             {/* show these page content only if you have a store */}
             <Link href="/dashboard/products">Products</Link>
-            <p>Sales</p>
+
+            {/* show these page content only if you have */}
+            <Link href="/dashboard/sales">Sales</Link>
 
             {/*  The account link is for setting and profile*/}
-            <p>Account</p>
+            <Link href="/dashboard/account">Account</Link>
 
             {/* show these page content only if you have a store */}
             <Link href="/dashboard/billing">Subscription</Link>

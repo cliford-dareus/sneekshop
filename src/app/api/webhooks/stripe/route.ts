@@ -36,7 +36,7 @@ export async function POST(req: Request) {
           id: session.metadata?.userId,
         },
         data: {
-          payment: {
+          subscription: {
             create: {
               stripeSubscriptionId: subscription.id,
               stripeCustomerId: subscription.customer as string,
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
       break;
     case "invoice.payment_succeeded":
       // Update the price id and set the new period end.
-      await prisma.user_payment.update({
+      await prisma.user_subscription.update({
         where: {
           stripeSubscriptionId: subscription.id,
         },

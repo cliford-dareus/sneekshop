@@ -4,7 +4,6 @@ import prisma from "@/libs/prismaDB";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import type { CartItems } from "@/libs/type";
-import exp from "constants";
 
 // ADD NEW ITEM TO EXISTING CART OR CREATE THE CART
 export const addToCard = async (item: CartItems) => {
@@ -83,6 +82,7 @@ export const getCart = async (cartId: string | undefined) => {
   return [cartItems, cartItemsDetails, uniqueSellerId];
 };
 
+// GET CARTLINEITEMS WITH QUANTITY AND SERLLER INFORMATION
 export const getCartLineItems = async (sellerId: string) => {
   const cartId = cookies().get("cartId")?.value;
 
@@ -107,13 +107,44 @@ export const getCartLineItems = async (sellerId: string) => {
   const products = await prisma.product.findMany({
     select: {
       id: true,
-      category: true,
+      title: true,
       description: true,
+      category: true,
+      subCategory: true,
+      tags: true,
       price: true,
-      sellerId: true
-    }
-  })
+      inventory: true,
+      seller: {
+        include: {
+          payment: true,
+        },
+      },
+    },
+    where: {
+      id: {
+        in: uniqueProductIds,
+      },
+    },
+  });
+
+  const productWithQuantity = products.map((product) => {
+    const quantity = cartItems.find((item) => {
+      return item.id === product.id;
+    })?.quantity;
+
+    return {
+      ...product,
+      quantity: quantity ?? 0,
+    };
+  });
+
+  console.log(products);
+  return productWithQuantity;
 };
+
+export type ProductWithQuantityAndSeller = Awaited<
+  ReturnType<typeof getCartLineItems>
+>;
 
 // UPDATE CART ITEMS
 export const updateCartItem = async (item: CartItems) => {
