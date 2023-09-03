@@ -9,7 +9,6 @@ export async function POST(req: Request) {
   const signature = headers().get("Stripe-Signature") ?? "";
   const webhookendpoint = process.env.STRIPE_WEB_HOOK_SECRET_KEY ?? "";
 
-  console.log("CALLED");
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(body, signature, webhookendpoint);
@@ -67,6 +66,9 @@ export async function POST(req: Request) {
           ),
         },
       });
+      break;
+    case "invoice.created":
+      
   }
 
   return new Response(null, { status: 200 });

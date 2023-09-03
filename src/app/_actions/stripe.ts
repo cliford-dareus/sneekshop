@@ -1,8 +1,9 @@
-'use server'
+"use server";
 import { stripe } from "@/libs/stripe";
 import prisma from "@/libs/prismaDB";
 import { subscriptionPlans } from "@/config/subscription-plans";
 import { Session } from "next-auth";
+import { NextAuthSession } from "../api/auth/[...nextauth]/route";
 
 interface ManageStripeSubscriptionActionProps {
   isSubscribed: boolean;
@@ -52,14 +53,14 @@ export const manageStripeSubscriptionAction = async ({
   return { url: stripeSession.url };
 };
 
-export async function getUserSubscriptionPlan(session: Session | null) {
+export async function getUserSubscriptionPlan(session: NextAuthSession | null) {
   if (!session || !session.user) {
     throw new Error("User not found.");
   }
 
   const user = await prisma.user.findFirst({
     where: {
-      id: session.user?.id,
+      id: session.user?.id as unknown as string,
     },
     include: {
       payment: true,
@@ -98,6 +99,33 @@ export async function getUserSubscriptionPlan(session: Session | null) {
     isCanceled,
   };
 }
+
+export const getSubscriptionInvoices = async (userId: string) => {
+  if (!userId) {
+    return [];
+  }
+
+  const subscriptionId = await prisma.user_payment.findFirst({
+    where: {
+      userId: userId,
+    },
+    select: {
+      stripeSubscriptionId: true,
+      stripePriceId: true,
+      stripeCustomerId: true
+    },
+  });
+
+  if (subscriptionId?.stripeSubscriptionId) {
+    const subscription = await stripe.invoices.list(
+      {
+        subscription: subscriptionId.stripeSubscriptionId
+      }
+    );
+    
+    return subscription.data;
+  }
+};
 
 // CREATE PAYMENT INTENT
 export const createPaymentIntent = async (item: any) => {
