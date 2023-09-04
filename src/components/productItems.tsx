@@ -23,6 +23,8 @@ const ProductItems = ({ pageCount, items }: Props) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  
+
   const [isPending, startTransition] = useTransition();
   const [filterOpen, setFilterOpen] = useState(false);
 

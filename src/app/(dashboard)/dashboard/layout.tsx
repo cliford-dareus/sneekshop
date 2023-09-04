@@ -24,7 +24,7 @@ const DashboardLayout = async ({ children }: Props) => {
         <aside className="w-full h-[calc(100vh-60px)] sticky top-[60px]">
           <div className="w-full py-4 h-[300px] bg-slate-800 mt-5 rounded-md p-4 flex flex-col">
             {/* show these page content only if you have a store */}
-            <Link href="/dashboard/products">Products</Link>
+            <Link href="/dashboard/store">store</Link>
 
             {/* show these page content only if you have */}
             <Link href="/dashboard/sales">Sales</Link>

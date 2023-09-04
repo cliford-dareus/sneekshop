@@ -67,7 +67,8 @@ export async function POST(req: Request) {
         },
       });
       break;
-    case "invoice.created":
+    case "account.updated":
+      console.log("success");
       
   }
 

@@ -18,7 +18,6 @@ const BillingPage = async (props: Props) => {
   const subscriptionPlan = await getUserSubscriptionPlan(session);
   const invoices = await getSubscriptionInvoices(session?.user.id as string);
 
-
   return (
     <div className="">
       {subscriptionPlan.isSubscribed ? (
@@ -63,7 +62,13 @@ const BillingPage = async (props: Props) => {
               </div>
 
               <div className="w-[30%] bg-slate-800 rounded-md flex items-center justify-center">
-                <ActiveStoreBtn sellerId={session?.user.id as string} />
+                {!subscriptionPlan.store_active ? (
+                  <ActiveStoreBtn sellerId={session?.user.id as string} />
+                ) : (
+                  <div>
+                    Store active
+                  </div>
+                )}
               </div>
             </div>
           </div>

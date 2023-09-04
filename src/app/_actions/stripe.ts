@@ -98,6 +98,7 @@ export async function getUserSubscriptionPlan(session: NextAuthSession | null) {
     stripeCustomerId: user.subscription?.stripeCustomerId,
     isSubscribed,
     isCanceled,
+    store_active: user.subscription?.store_active
   };
 }
 
@@ -141,12 +142,30 @@ export const createPaymentIntent = async (item: any) => {
 
 // MANAGE SELLER STRIPE ACCOUNT
 export const createSellerStripeAccount = async (sellerId: string) => {
-  const absoluteUrl = "http://localhost:3000/dashboard/billing";
+  const absoluteUrl = "http://localhost:3000/dashboard/";
   const { isConnected, account, payment } = await getSellerStripeAccount({
     sellerId,
   });
 
-  if (isConnected) {
+  const subscription = await prisma.user_subscription.findFirst({
+    where: {
+      userId: sellerId,
+    },
+    select: {
+      stripeCurrentPeriodEnd: true,
+      userId: true,
+    },
+  });
+
+  if (isConnected && subscription) {
+    await prisma.user_subscription.update({
+      data: {
+        store_active: true,
+      },
+      where: {
+        userId: subscription.userId,
+      },
+    });
     throw new Error("Store already connected to Stripe.");
   }
 
@@ -159,8 +178,8 @@ export const createSellerStripeAccount = async (sellerId: string) => {
 
   const accountLink = await stripe.accountLinks.create({
     account: stripeAccountId,
-    refresh_url: `${absoluteUrl}/${sellerId}`,
-    return_url: `${absoluteUrl}/${sellerId}`,
+    refresh_url: `${absoluteUrl}/store`,
+    return_url: `${absoluteUrl}/store`,
     type: "account_onboarding",
   });
 
