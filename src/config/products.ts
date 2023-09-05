@@ -116,3 +116,14 @@ export const sortOptions = [
   },
 ];
 
+export const getSubCategories = (category: string) => {
+  if (!category) return [];
+  const subcategories =
+    ProductCategories.find((c) => c.category === category.toLocaleLowerCase())?.subCategories.map(
+      (s) => ({
+        label: s.title,
+        value: s.slug,
+      })
+    ) ?? [];
+    return subcategories
+};

@@ -42,7 +42,7 @@ const page = async ({ searchParams }: Props) => {
     limit,
     offset,
   });
-  
+
   const pageCount = Math.ceil((len as number) / limit);
 
   // Check if user is subscribed and subscribe is not expired
@@ -57,7 +57,11 @@ const page = async ({ searchParams }: Props) => {
           <h1 className="text-2xl font-koulen">Storefront</h1>
           <p>Lorem ipsum dolor sit amet.</p>
         </div>
-        {!readyToSell && <Button className="bg-red-600">Add New</Button>}
+        {!readyToSell && (
+          <Button className="bg-red-600">
+            <Link href="/dashboard/store/new">Add New</Link>
+          </Button>
+        )}
       </div>
 
       {!readyToSell ? (

@@ -1,7 +1,9 @@
 "use server";
 
+import { InputProps } from "@/components/forms/createProductForm";
 import prisma from "@/libs/prismaDB";
-import { $Enums } from "@prisma/client";
+import { $Enums, Product } from "@prisma/client";
+
 type GetProductsProp = {
   pricerange: string | null;
   offset?: number;
@@ -9,6 +11,10 @@ type GetProductsProp = {
   categories: string | string[] | undefined;
   subcategories: string | string[] | undefined;
 };
+
+interface ProductForStore extends GetProductsProp {
+  sellerId: string;
+}
 
 export const getProductsAction = async ({
   pricerange,
@@ -57,16 +63,12 @@ export const getProductsAction = async ({
   });
 };
 
-interface ProductForStore extends GetProductsProp {
-  sellerId: string;
-}
-
 export const getSellerStoreProducts = async (input: ProductForStore) => {
   if (!input.sellerId) return [];
   const [min, max] = (input.pricerange?.split("-") as [string, string]) ?? [
     0, 1000,
   ];
-  
+
   const subscription = await prisma.user_subscription.findFirst({});
   const category = input.categories as $Enums.Category;
   const subCategories = input.subcategories as string;
@@ -85,6 +87,7 @@ export const getSellerStoreProducts = async (input: ProductForStore) => {
     },
   });
 
+
   const len = await prisma.product.count({
     where: {
       AND: {
@@ -101,3 +104,54 @@ export const getSellerStoreProducts = async (input: ProductForStore) => {
 
   return [len, storeProducts];
 };
+
+export const isProductUnique = async (input: {
+  id?: string;
+  title: string;
+}) => {
+  const product = await prisma.product.findFirst({
+    where: {
+      AND: {
+        id: input.id,
+        title: input.title,
+      },
+    },
+  });
+
+  if (product) {
+    throw new Error("Product name already taken.");
+  }
+};
+
+export const createProduct = async (
+  input: Product & { color: string | string[] }
+) => {
+  const isProductExist = await prisma.product.findFirst({
+    where: {
+      title: input.title,
+    },
+  });
+
+  if (isProductExist) {
+    throw new Error("Product already exists");
+  }
+
+  await prisma.product.create({
+    data: {
+      title: input.title,
+      description: input.description,
+      category: input.category,
+      subCategory: input.subCategory,
+      price: Number(input.price),
+      inventory: Number(input.inventory),
+      tags: input.tags,
+      sellerId: input.sellerId,
+      images: input.images ?? JSON.stringify([]),
+    },
+  });
+ 
+};
+
+export const updateProduct = async () => {};
+
+export const deleteProduct = async () => {};

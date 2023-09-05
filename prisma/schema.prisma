@@ -78,7 +78,7 @@ model Product {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   price       Int
-  image       String[]
+  images      Json
   inventory   Int
   description String
   category    Category @default(CLOTHING)

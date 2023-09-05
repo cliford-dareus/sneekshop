@@ -3,11 +3,11 @@ import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { InputProps } from "../forms/signupForm";
 
 type Props = {
-  name: "name" | "email" | "password";
+  name: string;
   placeholder: string;
   type: string;
-  register: UseFormRegister<InputProps>;
-  errors: FieldErrors<InputProps>
+  register: UseFormRegister<InputProps | any>;
+  errors: FieldErrors<InputProps | any>
 };
 
 const Input = ({ type, placeholder, register, name, errors }: Props) => {
