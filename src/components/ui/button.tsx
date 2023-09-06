@@ -7,14 +7,16 @@ type Props = {
   className: string;
   onclick?: any;
   disabled?: boolean;
+  id?: string;
 };
 
-const Button = ({ children, className, onclick, disabled }: Props) => {
+const Button = ({ children, className, onclick, disabled, id }: Props) => {
   return (
     <button
       className={classNames("flex py-[5px] px-4 cursor-pointer", className)}
       onClick={onclick}
       disabled={disabled}
+      id={id}
     >
       {children}
     </button>

@@ -2,7 +2,7 @@ import prisma from "@/libs/prismaDB";
 import { stripe } from "@/libs/stripe";
 import { headers } from "next/headers";
 import Stripe from "stripe";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -19,18 +19,18 @@ export async function POST(req: Request) {
     });
   }
 
-  const session = event.data.object as Stripe.Checkout.Session;
-
-  if (!session?.metadata?.userId) {
-    return NextResponse.json({ status: 200, message: null });
-  }
-
-  const subscription = await stripe.subscriptions.retrieve(
-    session.subscription as string
-  );
-
   switch (event.type) {
-    case "checkout.session.completed":
+    case "checkout.session.completed": {
+      const session = event.data.object as Stripe.Checkout.Session;
+
+      if (!session?.metadata?.userId) {
+        return NextResponse.json({ status: 200, message: "failed" });
+      }
+
+      const subscription = await stripe.subscriptions.retrieve(
+        session.subscription as string
+      );
+
       await prisma.user.update({
         where: {
           id: session.metadata?.userId,
@@ -53,7 +53,18 @@ export async function POST(req: Request) {
       });
       console.log("success");
       break;
-    case "invoice.payment_succeeded":
+    }
+
+    case "invoice.payment_succeeded": {
+      const session = event.data.object as Stripe.Checkout.Session;
+
+      if (!session?.metadata?.userId) {
+        return NextResponse.json({ status: 200, message: "failed" });
+      }
+
+      const subscription = await stripe.subscriptions.retrieve(
+        session.subscription as string
+      );
       // Update the price id and set the new period end.
       await prisma.user_subscription.update({
         where: {
@@ -67,10 +78,99 @@ export async function POST(req: Request) {
         },
       });
       break;
-    case "account.updated":
-      console.log("success");
-      
-  }
+    }
 
+    case "payment_intent.succeeded": {
+      const paymentIntent = event.data.object as Stripe.PaymentIntent;
+
+      const paymentIntentId = paymentIntent.id;
+      const amount = paymentIntent.amount;
+      const items = paymentIntent.metadata.items as unknown as {
+        productId: string;
+        price: number;
+        quantity: number;
+      }[];
+
+      console.log(paymentIntent);
+      if (items) {
+        try {
+          if (!event.account) throw new Error("No account found.");
+
+          const payment = await prisma.user_subscription.findFirst({
+            where: {
+              stripeAccountId: event.account,
+            },
+          });
+
+          if (!payment?.userId)
+            return new Response("Store not found.", { status: 404 });
+
+          const clientId = JSON.parse(paymentIntent.metadata.userId as string);
+
+          if (!clientId) {
+            return new Error("ClientId not parse.");
+          }
+
+          // create an order
+          await prisma.order.create({
+            data: {
+              userId: clientId,
+              total: Number(amount / 100),
+              sellerId: payment.userId,
+              email: paymentIntent?.receipt_email as string,
+              stripePaymentIntent: paymentIntentId,
+              stripePaymentIntentStatus: paymentIntent.status,
+              items: items ?? [],
+              address: "",
+            },
+          });
+
+          // check inventory
+          for (const item of items) {
+            const product = await prisma.product.findFirst({
+              where: {
+                id: item?.productId,
+              },
+              select: {
+                inventory: true,
+                id: true,
+              },
+            });
+
+            if (!product) {
+              throw new Error("Product not found.");
+            }
+
+            const inventory = product.inventory - item.quantity;
+
+            if (inventory < 0) {
+              throw new Error("Product out of stock.");
+            }
+
+            await prisma.product.update({
+              where: {
+                id: item.productId,
+              },
+              data: {
+                inventory: product.inventory - item.quantity,
+              },
+            });
+          }
+
+          // clear cart
+          await prisma.carts.update({
+            where: {
+            paymentIntentId:  paymentIntentId
+            },
+            data: {
+              items: [],
+            },
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+  }
   return new Response(null, { status: 200 });
 }

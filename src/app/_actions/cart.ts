@@ -48,13 +48,13 @@ export const addToCard = async (item: CartItems) => {
       return;
     }
   } else {
-    const newStore = await prisma.carts.create({
+    const newCart = await prisma.carts.create({
       data: {
         items: JSON.stringify([item]),
       },
     });
 
-    cookieStore.set("cartId", String(newStore.id));
+    cookieStore.set("cartId", String(newCart.id));
     revalidatePath("/");
     return;
   }
@@ -115,7 +115,7 @@ export const getCartLineItems = async (sellerId: string) => {
       price: true,
       inventory: true,
       seller: {
-        include: {
+        select: {
           payment: true,
         },
       },
@@ -138,7 +138,7 @@ export const getCartLineItems = async (sellerId: string) => {
     };
   });
 
-  console.log(products);
+  console.log(productWithQuantity);
   return productWithQuantity;
 };
 

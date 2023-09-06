@@ -1,9 +1,14 @@
 "use server";
+
 import { stripe } from "@/libs/stripe";
 import prisma from "@/libs/prismaDB";
 import { subscriptionPlans } from "@/config/subscription-plans";
 import { Session } from "next-auth";
-import { NextAuthSession } from "../api/auth/[...nextauth]/route";
+import { cookies } from "next/headers";
+import { NextAuthSession, authOptions } from "../api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
+import { ProductWithQuantityAndSeller } from "./cart";
+import { calculateOrderAmount } from "@/libs/checkout";
 
 interface ManageStripeSubscriptionActionProps {
   isSubscribed: boolean;
@@ -14,6 +19,7 @@ interface ManageStripeSubscriptionActionProps {
   userId: string | unknown;
 }
 
+// MANAGE STRIPE SUBSCRIPTION
 export const manageStripeSubscriptionAction = async ({
   isSubscribed,
   stripeCustomerId,
@@ -53,6 +59,7 @@ export const manageStripeSubscriptionAction = async ({
   return { url: stripeSession.url };
 };
 
+// GET SUBSCRIPTION PLAN
 export async function getUserSubscriptionPlan(session: NextAuthSession | null) {
   if (!session || !session.user) {
     throw new Error("User not found.");
@@ -98,10 +105,10 @@ export async function getUserSubscriptionPlan(session: NextAuthSession | null) {
     stripeCustomerId: user.subscription?.stripeCustomerId,
     isSubscribed,
     isCanceled,
-    store_active: user.subscription?.store_active
+    store_active: user.subscription?.store_active,
   };
 }
-
+// GET SUBSCRIPTION INVOICES
 export const getSubscriptionInvoices = async (userId: string) => {
   if (!userId) {
     return [];
@@ -125,19 +132,6 @@ export const getSubscriptionInvoices = async (userId: string) => {
 
     return subscription.data;
   }
-};
-
-// CREATE PAYMENT INTENT
-export const createPaymentIntent = async (item: any) => {
-  // const amount =
-
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: 100,
-    currency: "usd",
-    automatic_payment_methods: {
-      enabled: true,
-    },
-  });
 };
 
 // MANAGE SELLER STRIPE ACCOUNT
@@ -216,6 +210,7 @@ export const createSellerStripeAccount = async (sellerId: string) => {
     return account.id;
   }
 };
+
 // GET SELLER STRIPE ACCOUNT
 export const getSellerStripeAccount = async (input: {
   sellerId: string;
@@ -298,3 +293,114 @@ export const getSellerStripeAccount = async (input: {
     return falsyReturn;
   }
 };
+
+// CREATE PAYMENT INTENT
+export const createPaymentIntent = async (item: {
+  sellerId: string;
+  cartLineItems: ProductWithQuantityAndSeller;
+}) => {
+  try {
+    const session = (await getServerSession(authOptions)) as NextAuthSession;
+
+    if (!session?.user) {
+      throw new Error("User not found.");
+    }
+
+    const { isConnected, payment } = await getSellerStripeAccount({
+      sellerId: item.sellerId as unknown as string,
+    });
+
+    if (!isConnected || !payment) {
+      throw new Error("Store not connected to Stripe.");
+    }
+
+    if (!payment.stripeAccountId) {
+      throw new Error("Stripe account not found.");
+    }
+
+    const cartId = cookies().get("cartId")?.value;
+
+    const checkoutItems = item.cartLineItems.map((lineItem) => ({
+      productId: lineItem.id,
+      price: Number(lineItem.price),
+      quantity: lineItem.quantity,
+    }));
+
+    const metadata = {
+      cartId: cartId as string,
+      // Stripe metadata values must be within 500 characters string
+      userId: JSON.stringify(session.user.id),
+      items: JSON.stringify(checkoutItems),
+    };
+
+    const { total, fee } = calculateOrderAmount(item.cartLineItems);
+
+    if (cartId) {
+      const cart = await prisma.carts.findFirst({
+        where: {
+          id: cartId,
+        },
+      });
+
+      if (cart?.paymentIntentId && cart.clientstripesecret) {
+        const paymentIntent = await stripe.paymentIntents.retrieve(
+          cart.paymentIntentId,
+          {
+            stripeAccount: payment.stripeAccountId,
+          }
+        );
+
+        if (paymentIntent.status === "succeeded") {
+          await stripe.paymentIntents.update(
+            cart.paymentIntentId,
+            {
+              amount: total,
+              application_fee_amount: fee,
+              metadata,
+            },
+            {
+              stripeAccount: payment.stripeAccountId,
+            }
+          );
+        }
+      }
+    }
+
+    const paymentIntent = await stripe.paymentIntents.create(
+      {
+        amount: total,
+        metadata,
+        application_fee_amount: fee,
+        currency: "usd",
+        automatic_payment_methods: {
+          enabled: true,
+        },
+      },
+      {
+        stripeAccount: payment.stripeAccountId,
+      }
+    );
+
+    await prisma.carts.update({
+      where: {
+        id: cartId,
+      },
+      data: {
+        clientstripesecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id,
+      },
+    });
+
+    return { clientSecret: paymentIntent.client_secret };
+  } catch (error) {
+    console.error(error)
+    return {
+      clientSecret: null,
+    }
+  }
+};
+
+// GET PAYMENT INTENT
+export const getPaymentIntent = async () => {
+
+}

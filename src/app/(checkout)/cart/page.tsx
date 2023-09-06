@@ -60,7 +60,7 @@ const Cart = async ({}: Props) => {
         {cartItems.length && (
           <aside className="p-4 w-[300px] lg:w-[400px] bg-slate-800 rounded-md">
             <Button className="bg-red-600 w-full rounded-full flex justify-center items-center">
-              <Link href=""></Link>
+              <Link href="/"></Link>
               Proceed To Checkout
             </Button>
 

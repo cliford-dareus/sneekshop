@@ -13,7 +13,7 @@ const CartLineItems = ({ cartItems, products }: Props) => {
   return (
     <>
       {products.map((product, i) => {
-        const currentProductInCart = cartItems.find(
+        const currentProductInCart = cartItems?.find(
           (item) => item.id === product.id
         ) as { id: string; quantity: number };
 
