@@ -11,6 +11,8 @@ const CartPreview = async (props: Props) => {
   const cartId = cookieStore.get("cartId")?.value;
   const [cartItems, cartItemsDetails, uniqueSellerId] = await getCart(cartId);
 
+
+
   return (
     <div className="w-full text-black p-4">
         <Button className="bg-red-600">

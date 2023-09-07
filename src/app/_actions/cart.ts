@@ -62,7 +62,7 @@ export const addToCard = async (item: CartItems) => {
 
 // GET CART
 export const getCart = async (cartId: string | undefined) => {
-  const cart = await prisma.carts.findMany({
+  const cart = cartId === undefined? [] : await prisma.carts.findMany({
     where: {
       id: cartId,
     },
@@ -72,7 +72,7 @@ export const getCart = async (cartId: string | undefined) => {
     },
   });
 
-  const cartItems = JSON.parse(cart[0].items as string) as CartItems[];
+  const cartItems = cart.length? JSON.parse(cart[0].items as string) as CartItems[]: [];
   const cartItemsDetails = await getCartItemsDetails(cartId, cartItems);
 
   const uniqueSellerId = [
