@@ -108,6 +108,7 @@ export async function getUserSubscriptionPlan(session: NextAuthSession | null) {
     store_active: user.subscription?.store_active,
   };
 }
+
 // GET SUBSCRIPTION INVOICES
 export const getSubscriptionInvoices = async (userId: string) => {
   if (!userId) {

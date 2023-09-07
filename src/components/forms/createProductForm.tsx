@@ -60,7 +60,7 @@ const CreateProductForm = ({ sellerId }: Props) => {
 
         await createProduct({
           ...data,
-          images: images as Prisma.JsonValue,
+          images: JSON.stringify(images),
           sellerId,
           tags: ["NEW"],
         });
@@ -80,7 +80,7 @@ const CreateProductForm = ({ sellerId }: Props) => {
         <div className="flex flex-col">
           <Label name="Product name" />
           <Input
-            placeholder=""
+            placeholder="UV sunglasses..."
             name="title"
             type="text"
             register={form.register}
@@ -91,7 +91,7 @@ const CreateProductForm = ({ sellerId }: Props) => {
         <div className="flex flex-col">
           <Label name="Product description" />
           <Input
-            placeholder=""
+            placeholder="UV sunglasses Description..."
             name="description"
             type="text"
             register={form.register}
@@ -102,7 +102,7 @@ const CreateProductForm = ({ sellerId }: Props) => {
         <div className="flex flex-col">
           <Label name="Product category" />
           <select
-            className="text-black"
+            className="text-black px-4 py-1 rounded-md"
             {...form.register("category")}
             name="category"
           >
@@ -117,7 +117,7 @@ const CreateProductForm = ({ sellerId }: Props) => {
         <div className="flex flex-col">
           <Label name="Product subcategory" />
           <select
-            className="text-black"
+            className="text-black px-4 py-1 rounded-md"
             {...form.register("subCategory")}
             name="subCategory"
           >
@@ -132,7 +132,7 @@ const CreateProductForm = ({ sellerId }: Props) => {
         <div className="flex flex-col">
           <Label name="Product price" />
           <Input
-            placeholder=""
+            placeholder="50"
             name="price"
             type="number"
             register={form.register}
@@ -143,7 +143,7 @@ const CreateProductForm = ({ sellerId }: Props) => {
         <div className="flex flex-col">
           <Label name="Product inventory" />
           <Input
-            placeholder=""
+            placeholder="400"
             name="inventory"
             type="number"
             register={form.register}
@@ -154,10 +154,11 @@ const CreateProductForm = ({ sellerId }: Props) => {
         <div className="flex flex-col">
           <Label name="Product color" />
           <select
-            className="text-black"
+            className="text-black px-4 py-1 rounded-md"
             multiple
             {...form.register("color")}
             name="color"
+            placeholder="Choose a color"
           >
             <optgroup>
               {productsColors.map((color) => (
@@ -182,7 +183,7 @@ const CreateProductForm = ({ sellerId }: Props) => {
             setvalue={form.setValue}
           />
         </>
-        <Button className="bg-red-600">Add Product</Button>
+        {!isPending && <Button className="bg-red-600 flex items-center justify-center">Add Product</Button>}
       </form>
     </div>
   );

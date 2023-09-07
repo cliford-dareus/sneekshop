@@ -13,7 +13,7 @@ type Props = {
 const Button = ({ children, className, onclick, disabled, id }: Props) => {
   return (
     <button
-      className={classNames("flex py-[5px] px-4 cursor-pointer", className)}
+      className={classNames("flex py-[5px] px-4 cursor-pointer rounded-md", className)}
       onClick={onclick}
       disabled={disabled}
       id={id}

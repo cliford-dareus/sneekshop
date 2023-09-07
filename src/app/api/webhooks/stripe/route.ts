@@ -1,7 +1,7 @@
+import Stripe from "stripe";
 import prisma from "@/libs/prismaDB";
 import { stripe } from "@/libs/stripe";
 import { headers } from "next/headers";
-import Stripe from "stripe";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -91,7 +91,7 @@ export async function POST(req: Request) {
         quantity: number;
       }[];
 
-      console.log(paymentIntent);
+      const pasreItems = JSON.parse(items as unknown as string);
       if (items) {
         try {
           if (!event.account) throw new Error("No account found.");
@@ -120,13 +120,13 @@ export async function POST(req: Request) {
               email: paymentIntent?.receipt_email as string,
               stripePaymentIntent: paymentIntentId,
               stripePaymentIntentStatus: paymentIntent.status,
-              items: items ?? [],
+              items: items ?? JSON.stringify([]),
               address: "",
             },
           });
 
           // check inventory
-          for (const item of items) {
+          for (const item of pasreItems) {
             const product = await prisma.product.findFirst({
               where: {
                 id: item?.productId,
@@ -149,7 +149,7 @@ export async function POST(req: Request) {
 
             await prisma.product.update({
               where: {
-                id: item.productId,
+                id: item?.productId,
               },
               data: {
                 inventory: product.inventory - item.quantity,
@@ -160,10 +160,10 @@ export async function POST(req: Request) {
           // clear cart
           await prisma.carts.update({
             where: {
-            paymentIntentId:  paymentIntentId
+              paymentIntentId,
             },
             data: {
-              items: [],
+              items: JSON.stringify([]),
             },
           });
         } catch (error) {

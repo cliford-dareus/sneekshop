@@ -13,7 +13,7 @@ type Props = {
 const Input = ({ type, placeholder, register, name, errors }: Props) => {
   return (
     <input
-      className="text-black"
+      className="text-black rounded-md px-4 py-1 outline mt-1 placeholder:text-slate-400"
       type={type}
       placeholder={placeholder}
       {...(register(name))}

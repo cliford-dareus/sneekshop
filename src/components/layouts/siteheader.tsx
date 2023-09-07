@@ -4,6 +4,7 @@ import MobileNavbar from "./mobileNavbar";
 import Link from "next/link";
 import CartButton from "../checkout/cart-button";
 import Authactions from "../ui/authactions";
+import CartPreview from "../checkout/cart-preview";
 
 type Props = {};
 
@@ -20,7 +21,9 @@ const Siteheader = (props: Props) => {
         </div>
 
         <div className="flex items-center gap-4">
-          <CartButton />
+          <CartButton>
+            <CartPreview />
+          </CartButton>
           <Authactions />
         </div>
       </div>

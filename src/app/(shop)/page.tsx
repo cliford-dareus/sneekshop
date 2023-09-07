@@ -2,21 +2,58 @@ import Button from "@/components/ui/button";
 import Cards from "@/components/ui/cards";
 import Carousel from "@/components/ui/carousel";
 import Link from "next/link";
+import prisma from "@/libs/prismaDB";
+import Image from "next/image";
 
 type Props = {};
 
-const LandingPage = (props: Props) => {
+const LandingPage = async (props: Props) => {
+  const product = await prisma.product.findMany({
+    select: {
+      id: true,
+      title: true,
+      images: true,
+      category: true,
+      tags: true,
+      price: true,
+    },
+  });
+
+  const featuredProduct = product.filter((product) =>
+    product.tags.includes("FEATURED")
+  );
+  
+  const url =
+    JSON.parse(product[0]?.images as string)[0]?.url ??
+    "https://utfs.io/f/ffcca2f3-d293-4543-824a-aa752d3fd536_th.jpg";
+
   return (
     <section>
       <section className="max-w-[64rem] mx-auto h-[70vh] flex flex-col justify-center items-center">
         <div className="flex flex-col items-center justify-center gap-2 ">
           <div className="text-6xl text-center font-koulen flex items-center gap-2">
             <h1>UPGRAGE YOUR STYLE GAME </h1>
-            <div className="w-[200px] h-[80px] bg-pink-300 rounded-full"></div>
+            <div className="w-[200px] h-[80px] bg-pink-300 rounded-full relative overflow-hidden">
+              <Image
+                src={url}
+                alt=""
+                width={200}
+                height={80}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
           </div>
           <div className="text-6xl text-center font-koulen flex items-center gap-2">
             <h1>WITH OUR TRENDY</h1>{" "}
-            <div className="w-[200px] h-[80px] bg-pink-300 rounded-full"></div>{" "}
+            <div className="w-[200px] h-[80px] bg-pink-300 rounded-full relative overflow-hidden">
+              <Image
+                src={url}
+                alt=""
+                width={200}
+                height={80}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>{" "}
             <span>AND AFFORDADLE</span>
           </div>
           <h1 className="text-6xl text-center font-koulen">CLOTHING!</h1>
@@ -24,9 +61,7 @@ const LandingPage = (props: Props) => {
 
         <div className="flex gap-8 mt-8">
           <Button className="border">
-            <Link href='/dashboard/billing'>
-               SELL NOW
-            </Link>
+            <Link href="/dashboard/billing">SELL NOW</Link>
           </Button>
           <Button className="bg-red-600">SHOP NOW</Button>
         </div>
@@ -59,7 +94,7 @@ const LandingPage = (props: Props) => {
           </div>
 
           <div>
-            <Carousel />
+            <Carousel items={product} />
           </div>
         </div>
       </section>
@@ -95,17 +130,11 @@ const LandingPage = (props: Props) => {
       <section className="container py-4 mt-[4em]">
         <h2 className="text-3xl font-koulen">FEATURED PRODUCTS</h2>
         <p className="">Lorem ipsum dolor sit amet consectetur.</p>
-        <div className="h-[50px] mt-4">
-          <span className="px-4 py-1 bg-red-600">TOP</span>
-          <span className="px-4 py-1">BOTTOM</span>
-          <span className="px-4 py-1 ">JACKET</span>
-          <span className="px-4 py-1 ">SUIT</span>
-        </div>
 
-        <div className="">
+        <div className="mt-4">
           <div className="grid grid-cols-4 gap-4">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <Cards className="" key={i}/>
+            {featuredProduct.map((product) => (
+              <Cards className="" key={product.id} item={product} />
             ))}
           </div>
           <div className="flex mt-8 justify-end cursor-pointer">
@@ -121,7 +150,7 @@ const LandingPage = (props: Props) => {
                 <path
                   d="M0 13C3.70732 13 28.2114 13 40 13L27.3171 3"
                   stroke="white"
-                  stroke-width="6"
+                  strokeWidth="6"
                 />
               </svg>
             </div>
@@ -146,7 +175,7 @@ const LandingPage = (props: Props) => {
               <path
                 d="M0 13C3.70732 13 28.2114 13 40 13L27.3171 3"
                 stroke="white"
-                stroke-width="6"
+                strokeWidth="6"
               />
             </svg>
           </div>

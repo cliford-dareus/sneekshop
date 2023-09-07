@@ -169,7 +169,6 @@ const ProductItems = ({ pageCount, items }: Props) => {
                     max={300}
                     step={1}
                     onChange={(value) => {
-                      console.log(value);
                       setPriceRange([value.min, value.max]);
                     }}
                   />
