@@ -12,12 +12,14 @@ const DoubleThumbSlider = ({ min, max, step, onChange }: Props) => {
   const [maxVal, setMaxVal] = useState(max);
 
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     const value = Math.min(Number(e.target.value), maxVal - step);
     setMinVal(value);
     onChange({ min: value, max: maxVal });
   };
 
   const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
     const value = Math.max(Number(e.target.value), minVal + step);
     setMaxVal(value);
     onChange({ min: Number(minVal), max: value });
@@ -27,8 +29,8 @@ const DoubleThumbSlider = ({ min, max, step, onChange }: Props) => {
     <div className="flex items-center justify-center w-full h-[5px] bg-red-600 my-4">
       <input
         type="range"
-        min={min}
-        max={max}
+        min={0}
+        max={500}
         step={step}
         value={minVal}
         onChange={handleMinChange}
@@ -36,8 +38,8 @@ const DoubleThumbSlider = ({ min, max, step, onChange }: Props) => {
       />
       <input
         type="range"
-        min={min}
-        max={max}
+        min={0}
+        max={500}
         step={step}
         value={maxVal}
         onChange={handleMaxChange}

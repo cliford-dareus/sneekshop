@@ -82,7 +82,8 @@ const ProductItems = ({ pageCount, items }: Props) => {
   }, [selectedColor]);
 
   // Sort by Price Range
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
+  const pr = searchParams.get('price_range')?.split('-') ?? ['0','500']
+  const [priceRange, setPriceRange] = useState<[number, number]>([Number(pr[0]), Number(pr[1])]);
   const debouncedPriceRange = useDebounce(priceRange, 500);
 
   useEffect(() => {
@@ -165,8 +166,8 @@ const ProductItems = ({ pageCount, items }: Props) => {
                 <div className="mt-2">
                   <p className="font-koulen">Price</p>
                   <DoubleThumbSlider
-                    min={0}
-                    max={300}
+                    min={priceRange[0]}
+                    max={priceRange[1]}
                     step={1}
                     onChange={(value) => {
                       setPriceRange([value.min, value.max]);
