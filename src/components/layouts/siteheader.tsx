@@ -22,6 +22,7 @@ const Siteheader = (props: Props) => {
 
         <div className="flex items-center gap-4">
           <CartButton>
+            
             <CartPreview />
           </CartButton>
           <Authactions />

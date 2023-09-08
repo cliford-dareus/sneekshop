@@ -3,6 +3,7 @@ import type { Product } from "@prisma/client";
 import { Minus, Plus, X } from "lucide-react";
 import Button from "../ui/button";
 import { updateCartItem } from "@/app/_actions/cart";
+import Image from "next/image";
 
 type Props = {
   cartItems: { id: string; quantity: number }[];
@@ -16,6 +17,13 @@ const CartLineItems = ({ cartItems, products }: Props) => {
         const currentProductInCart = cartItems?.find(
           (item) => item.id === product.id
         ) as { id: string; quantity: number };
+        
+        const image = JSON.parse(product.images as string) as {
+          id: string;
+          name: string;
+          url: string;
+        }[];
+        let url = image.length ? image[0].url : "";
 
         return (
           <div
@@ -34,7 +42,15 @@ const CartLineItems = ({ cartItems, products }: Props) => {
               <X size={20} />
             </Button>
             <div className="flex gap-4">
-              <div className="w-[100px] h-[90px] bg-white rounded-md"></div>
+              <div className="w-[100px] h-[90px] bg-white rounded-md relative overflow-hidden">
+                <Image
+                  src={url}
+                  alt=""
+                  width={100}
+                  height={90}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
               <div className="w-full flex flex-col">
                 <>
                   <p>{product.title}</p>

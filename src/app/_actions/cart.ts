@@ -114,6 +114,7 @@ export const getCartLineItems = async (sellerId: string) => {
       tags: true,
       price: true,
       inventory: true,
+      images: true,
       seller: {
         select: {
           payment: true,
