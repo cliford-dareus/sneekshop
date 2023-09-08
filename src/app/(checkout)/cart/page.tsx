@@ -45,7 +45,7 @@ const Cart = async ({}: Props) => {
                     </span>
                   </>
                   <Button className="ml-auto">
-                    <Link href={`checkout/${sellerId}`}>Checkout</Link>
+                    <Link href={`http://localhost:3000/checkout/${sellerId}`}>Checkout</Link>
                   </Button>
                 </div>
               </div>

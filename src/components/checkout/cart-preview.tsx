@@ -44,7 +44,7 @@ const CartPreview = async (props: Props) => {
                     }
                   </span>
                   <Button className="ml-auto bg-white">
-                    <Link href={`checkout/${seller}`}>Checkout</Link>
+                    <Link href={`http://localhost:3000/checkout/${seller}`}>Checkout</Link>
                   </Button>
                 </div>
               </div>
