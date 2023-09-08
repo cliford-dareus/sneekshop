@@ -191,7 +191,30 @@ export const updateCartItem = async (item: CartItems) => {
 };
 
 // CLEAR CART
-export const clearCart = async (item: CartItems) => {};
+export const clearCartActions = async () => {
+  const cartId = cookies().get("cartId")?.value;
+  if (!cartId) return;
+
+  const cart = await prisma.carts.findFirst({
+    where: {
+      id: cartId
+    }
+  })
+
+  if(!cart){
+    throw new Error('Cart doesnt exit')
+  }
+
+  await prisma.carts.update({
+    data: {
+      items: JSON.stringify([])
+    },
+    where: {
+      id: cartId
+    }
+  })
+   revalidatePath("/");
+};
 
 // GET PRODUCT DETAILS FOR CART ITEMS
 export const getCartItemsDetails = async (

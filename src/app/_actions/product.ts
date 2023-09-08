@@ -23,44 +23,40 @@ export const getProductsAction = async ({
   categories,
   subcategories,
 }: GetProductsProp) => {
-  return await prisma.$transaction(async (ctx) => {
-    const [min, max] = (pricerange?.split("-") as [string, string]) ?? [
-      0, 1000,
-    ];
-    const category = categories as $Enums.Category;
-    const subCategory = subcategories as string;
+  const [min, max] = (pricerange?.split("-") as [string, string]) ?? [0, 1000];
+  const category = categories as $Enums.Category;
+  const subCategory = subcategories as string;
 
-    const items = await ctx.product.findMany({
-      take: limit,
-      skip: offset,
-      orderBy: { title: "asc" },
-      where: {
-        AND: {
-          category,
-          subCategory,
-          price: {
-            gte: Number(min),
-            lte: Number(max),
-          },
+  const items = await prisma.product.findMany({
+    take: limit,
+    skip: offset,
+    orderBy: { title: "asc" },
+    where: {
+      AND: {
+        category,
+        subCategory,
+        price: {
+          gte: Number(min),
+          lte: Number(max),
         },
       },
-    });
-
-    const len = await ctx.product.count({
-      where: {
-        AND: {
-          category,
-          subCategory,
-          price: {
-            gte: Number(min),
-            lte: Number(max),
-          },
-        },
-      },
-    });
-
-    return [items, len];
+    },
   });
+
+  const len = await prisma.product.count({
+    where: {
+      AND: {
+        category,
+        subCategory,
+        price: {
+          gte: Number(min),
+          lte: Number(max),
+        },
+      },
+    },
+  });
+
+  return [items, len];
 };
 
 export const getSellerStoreProducts = async (input: ProductForStore) => {
@@ -69,7 +65,9 @@ export const getSellerStoreProducts = async (input: ProductForStore) => {
     0, 1000,
   ];
 
+  // check if subscription is still active or not expired and if store is still active
   const subscription = await prisma.user_subscription.findFirst({});
+
   const category = input.categories as $Enums.Category;
   const subCategories = input.subcategories as string;
 
@@ -86,7 +84,6 @@ export const getSellerStoreProducts = async (input: ProductForStore) => {
       },
     },
   });
-
 
   const len = await prisma.product.count({
     where: {
@@ -149,7 +146,6 @@ export const createProduct = async (
       images: input.images ?? JSON.stringify([]),
     },
   });
- 
 };
 
 export const updateProduct = async () => {};
