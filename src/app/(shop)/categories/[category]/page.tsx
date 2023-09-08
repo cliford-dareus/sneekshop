@@ -35,7 +35,9 @@ const Page = async ({params, searchParams }: CategoryPageProps) => {
 
   const pageCount = Math.ceil((len as number) / limit);
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto py-4">
+      <h1 className="font-koulen text-3xl">{params.category}</h1>
+      <p>Lorem ipsum dolor, sit amet consectetur adipisicing.</p>
       <ProductItems items={items as Product[]} pageCount={pageCount} />
     </div>
   );

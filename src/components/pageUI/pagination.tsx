@@ -51,6 +51,10 @@ const Pagination = ({
       range.push(pageCount);
     }
 
+    if(pageCount === 0) {
+      range.shift()
+    }
+
     return range;
   }, [pageCount, page]);
 
