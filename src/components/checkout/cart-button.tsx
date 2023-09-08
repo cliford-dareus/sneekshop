@@ -20,7 +20,7 @@ const CartButton = ({ children }: Props) => {
 
       {isCartOpen && (
         <>
-          <div className="fixed top-0 right-0  h-screen w-[40%] bg-white z-50 p-4">
+          <div className="fixed top-0 right-0  h-screen w-[40vw] bg-white z-50 p-4 max-w-[500px]">
             <div className="border-b flex item-center justify-between h-[45px] text-black">
               <h1 className="font-koulen text-2xl">Shopping Cart</h1>
               <span

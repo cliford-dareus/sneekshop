@@ -9,7 +9,7 @@ type GetProductsProp = {
   offset?: number;
   limit?: number;
   categories: string | string[] | undefined;
-  subcategories: string | string[] | undefined;
+  subcategories?: string | string[] | undefined;
 };
 
 interface ProductForStore extends GetProductsProp {

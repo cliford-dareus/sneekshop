@@ -1,22 +1,26 @@
 import { getProductsAction } from "@/app/_actions/product";
 import ProductItems from "@/components/productItems";
 import { Product } from "@prisma/client";
+import React from "react";
 
-type Props = {
+type CategoryPageProps ={
+  params: {
+    category: Product["category"];
+  };
   searchParams: {
     [key: string]: string | string[] | undefined;
   };
-};
+}
 
-const Products = async ({ searchParams }: Props) => {
+
+const Page = async ({params, searchParams }: CategoryPageProps) => {
   const {
     page,
     per_page,
     sort,
-    categories,
-    subcategories,
-    price_range,
+    price_range
   } = searchParams ?? {};
+  const categories = params.category.toLocaleUpperCase()
 
   const limit = typeof per_page === "string" ? parseInt(per_page) : 8;
   const offset = typeof page === "string" ? (parseInt(page) - 1) * limit : 0;
@@ -27,20 +31,14 @@ const Products = async ({ searchParams }: Props) => {
     offset,
     limit,
     categories,
-    subcategories,
   });
-  
-  const pageCount = Math.ceil((len as number) / limit);
 
+  const pageCount = Math.ceil((len as number) / limit);
   return (
-    <section className="container py-4">
-      <div className="">
-        <h1 className="text-3xl font-koulen">Products</h1>
-        <p className="">Lorem ipsum dolor sit amet, adipisicing elit.</p>
-      </div>
-      <ProductItems pageCount={pageCount} items={items as Product[]} />
-    </section>
+    <div className="container mx-auto">
+      <ProductItems items={items as Product[]} pageCount={pageCount} />
+    </div>
   );
 };
 
-export default Products;
+export default Page;
