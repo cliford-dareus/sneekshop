@@ -4,6 +4,7 @@ import Carousel from "@/components/ui/carousel";
 import Link from "next/link";
 import prisma from "@/libs/prismaDB";
 import Image from "next/image";
+import ProductBanner from "@/components/banners/product-banner";
 
 type Props = {};
 
@@ -22,7 +23,7 @@ const LandingPage = async (props: Props) => {
   const featuredProduct = product.filter((product) =>
     product.tags.includes("FEATURED")
   );
-  
+
   const url =
     JSON.parse(product[0]?.images as string)[0]?.url ??
     "https://utfs.io/f/ffcca2f3-d293-4543-824a-aa752d3fd536_th.jpg";
@@ -124,8 +125,8 @@ const LandingPage = async (props: Props) => {
       </section>
 
       <section className="h-[300px] mt-[4em] container">
-        <div className="bg-slate-500 w-full h-full rounded-md">
-          
+        <div className="bg-slate-500 w-full h-full rounded-md overflow-hidden">
+          <ProductBanner />
         </div>
       </section>
 
@@ -160,9 +161,15 @@ const LandingPage = async (props: Props) => {
         </div>
       </section>
 
-      <section className="container py-4 mt-[4em]">
-        <h2 className="text-3xl font-koulen">FEATURED STORE</h2>
+      <section className="container py-4 my-[4em] ">
+        <h2 className="text-3xl font-koulen">FEATURED SELLERS</h2>
         <p className="">Lorem ipsum dolor sit amet consectetur.</p>
+        
+        <div className="grid grid-cols-4 gap-4 w-full h-[100px] mt-4">
+          {[1, 2, 3, 4].map((seller) => (
+            <div className=" h-[100px] bg-slate-700 rounded-md" key={seller}></div>
+          ))}
+        </div>
 
         <div className="flex mt-8 justify-end cursor-pointer">
           <div className="flex gap-4">
