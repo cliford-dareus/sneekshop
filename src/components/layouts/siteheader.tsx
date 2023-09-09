@@ -10,7 +10,7 @@ type Props = {};
 
 const Siteheader = (props: Props) => {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-black">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-700 bg-black">
       <div className="container flex items-center h-[60px]">
         <div className="flex items-center mr-auto">
           <Link href="/" className="mr-8 text-3xl font-koulen">

@@ -51,9 +51,9 @@ const Cards = ({ className, item }: Props) => {
         </Button>
       </div>
       <div className="flex items-center pt-4 cursor-pointer">
-        <div className="text-[.8rem]">
+        <div className="text-[.9rem]">
           <p className="">{item?.title}</p>
-          <span className="">{item?.price}</span>
+          <span className="">${item?.price}</span>
         </div>
       </div>
     </div>

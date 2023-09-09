@@ -1,5 +1,6 @@
 import { getProductsAction } from "@/app/_actions/product";
 import ProductItems from "@/components/productItems";
+import { formatSortQuery } from "@/config/products";
 import { Product } from "@prisma/client";
 
 type Props = {
@@ -9,27 +10,23 @@ type Props = {
 };
 
 const Products = async ({ searchParams }: Props) => {
-  const {
-    page,
-    per_page,
-    sort,
-    categories,
-    subcategories,
-    price_range,
-  } = searchParams ?? {};
+  const { page, per_page, sort, categories, subcategories, price_range } =
+    searchParams ?? {};
 
   const limit = typeof per_page === "string" ? parseInt(per_page) : 8;
   const offset = typeof page === "string" ? (parseInt(page) - 1) * limit : 0;
   const pricerange = typeof price_range === "string" ? price_range : null;
+  const orderBy = formatSortQuery(sort);
 
   const [items, len] = await getProductsAction({
     pricerange,
     offset,
     limit,
+    orderBy,
     categories,
     subcategories,
   });
-  
+
   const pageCount = Math.ceil((len as number) / limit);
 
   return (

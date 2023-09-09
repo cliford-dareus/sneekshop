@@ -8,6 +8,7 @@ type GetProductsProp = {
   pricerange: string | null;
   offset?: number;
   limit?: number;
+  orderBy?: { [key: string]: string };
   categories: string | string[] | undefined;
   subcategories?: string | string[] | undefined;
 };
@@ -20,6 +21,7 @@ export const getProductsAction = async ({
   pricerange,
   offset,
   limit,
+  orderBy,
   categories,
   subcategories,
 }: GetProductsProp) => {
@@ -30,7 +32,7 @@ export const getProductsAction = async ({
   const items = await prisma.product.findMany({
     take: limit,
     skip: offset,
-    orderBy: { title: "asc" },
+    orderBy: orderBy,
     where: {
       AND: {
         category,

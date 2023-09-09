@@ -8,14 +8,14 @@ import { Product } from "@prisma/client";
 import DoubleThumbSlider from "./ui/slider";
 import Pagination from "./pageUI/pagination";
 import { useDebounce } from "@/hooks/use-debounce";
-import { productsColors, productsSizes } from "@/config/products";
+import { productsColors, productsSizes, sortOptions } from "@/config/products";
 import { useTransition, useEffect, useState, useCallback } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ArrowDownWideNarrow, ChevronDown, ListFilter, X } from "lucide-react";
 
 type Props = {
   pageCount: number;
-  items: Product[]
+  items: Product[];
 };
 
 const ProductItems = ({ pageCount, items }: Props) => {
@@ -23,10 +23,9 @@ const ProductItems = ({ pageCount, items }: Props) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  
-
   const [isPending, startTransition] = useTransition();
   const [filterOpen, setFilterOpen] = useState(false);
+  const [sortOpen, setSortOpen] = useState(false);
 
   const page = searchParams.get("page") ?? "1";
   const per_page = searchParams.get("per_page") ?? "8";
@@ -58,7 +57,7 @@ const ProductItems = ({ pageCount, items }: Props) => {
         `${pathname}?${createQueryString({ gender: selectedGender })}`
       );
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGender]);
 
   // Sort by Size
@@ -68,7 +67,7 @@ const ProductItems = ({ pageCount, items }: Props) => {
     startTransition(() => {
       router.push(`${pathname}?${createQueryString({ size: selectedSize })}`);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSize]);
 
   // Sort by Color
@@ -78,12 +77,15 @@ const ProductItems = ({ pageCount, items }: Props) => {
     startTransition(() => {
       router.push(`${pathname}?${createQueryString({ color: selectedColor })}`);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedColor]);
 
   // Sort by Price Range
-  const pr = searchParams.get('price_range')?.split('-') ?? ['0','500']
-  const [priceRange, setPriceRange] = useState<[number, number]>([Number(pr[0]), Number(pr[1])]);
+  const pr = searchParams.get("price_range")?.split("-") ?? ["0", "500"];
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    Number(pr[0]),
+    Number(pr[1]),
+  ]);
   const debouncedPriceRange = useDebounce(priceRange, 500);
 
   useEffect(() => {
@@ -95,8 +97,18 @@ const ProductItems = ({ pageCount, items }: Props) => {
         })}`
       );
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedPriceRange]);
+
+  // Sort in descending or ascending order
+  const [selectedSort, setSelectedSort] = useState<string | null>(null);
+
+  useEffect(() => {
+    startTransition(() => {
+      router.push(`${pathname}?${createQueryString({ sort: selectedSort })}`);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSort]);
 
   return (
     <>
@@ -104,7 +116,7 @@ const ProductItems = ({ pageCount, items }: Props) => {
         <>
           <span
             onClick={() => setFilterOpen(!filterOpen)}
-            className="flex items-center gap-4 py-1 px-4 border cursor-pointer bg-white"
+            className="flex items-center gap-4 py-1 px-4 border cursor-pointer bg-white rounded-md"
           >
             <ListFilter />
             <span>Filter</span>
@@ -216,22 +228,43 @@ const ProductItems = ({ pageCount, items }: Props) => {
             </>
           )}
         </>
-        <span className="flex items-center gap-4 py-1 px-4 border cursor-pointer bg-white">
-          <div className="flex items-center">
-            <ArrowDownWideNarrow />
-            <span>Sort</span>
-          </div>
 
-          <ChevronDown />
-        </span>
+        <div className="relative">
+          <span
+            className="flex items-center gap-4 py-1 px-4 border cursor-pointer bg-white rounded-md"
+            onClick={() => setSortOpen(!sortOpen)}
+          >
+            <div className="flex items-center">
+              <ArrowDownWideNarrow />
+              <span>Sort</span>
+            </div>
+
+            <ChevronDown />
+          </span>
+
+          {sortOpen && (
+            <div className="absolute top-10 w-[230px] p-4 bg-white z-50 rounded-md">
+              {sortOptions.map((option, i) => (
+                <div
+                  key={option.label}
+                  className="py-1  px-4 shadow-lg mt-2 cursor-pointer hover:bg-slate-200 rounded-md"
+                  onClick={() => {
+                    setSelectedSort(option.value);
+                    setSortOpen(false);
+                  }}
+                >
+                  {option.label}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-4 gap-4 mt-4">
-        {items
-          .slice(0, 12)
-          .map((item) => (
-            <Cards className="" key={item.id} item={item}/>
-          ))}
+        {items.slice(0, 12).map((item) => (
+          <Cards className="" key={item.id} item={item} />
+        ))}
       </div>
 
       <Pagination

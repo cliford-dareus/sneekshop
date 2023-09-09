@@ -1,26 +1,22 @@
 import { getProductsAction } from "@/app/_actions/product";
 import ProductItems from "@/components/productItems";
+import { formatSortQuery } from "@/config/products";
 import { Product } from "@prisma/client";
 import React from "react";
 
-type CategoryPageProps ={
+type CategoryPageProps = {
   params: {
     category: Product["category"];
   };
   searchParams: {
     [key: string]: string | string[] | undefined;
   };
-}
+};
 
-
-const Page = async ({params, searchParams }: CategoryPageProps) => {
-  const {
-    page,
-    per_page,
-    sort,
-    price_range
-  } = searchParams ?? {};
-  const categories = params.category.toLocaleUpperCase()
+const Page = async ({ params, searchParams }: CategoryPageProps) => {
+  const { page, per_page, sort, price_range } = searchParams ?? {};
+  const categories = params.category.toLocaleUpperCase();
+  const orderBy = formatSortQuery(sort);
 
   const limit = typeof per_page === "string" ? parseInt(per_page) : 8;
   const offset = typeof page === "string" ? (parseInt(page) - 1) * limit : 0;
@@ -30,6 +26,7 @@ const Page = async ({params, searchParams }: CategoryPageProps) => {
     pricerange,
     offset,
     limit,
+    orderBy,
     categories,
   });
 

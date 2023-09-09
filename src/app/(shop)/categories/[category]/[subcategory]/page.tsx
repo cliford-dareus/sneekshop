@@ -1,5 +1,6 @@
 import { getProductsAction } from "@/app/_actions/product";
 import ProductItems from "@/components/productItems";
+import { formatSortQuery } from "@/config/products";
 import { Product } from "@prisma/client";
 import { MoveRight } from "lucide-react";
 import React from "react";
@@ -18,6 +19,7 @@ const Page = async ({ params, searchParams }: subCategoryPageProps) => {
   const { page, per_page, sort, price_range } = searchParams ?? {};
   const categories = params.category.toLocaleUpperCase();
   const subcategories = params.subcategory;
+  const orderBy = formatSortQuery(sort);
 
   const limit = typeof per_page === "string" ? parseInt(per_page) : 8;
   const offset = typeof page === "string" ? (parseInt(page) - 1) * limit : 0;
@@ -27,6 +29,7 @@ const Page = async ({ params, searchParams }: subCategoryPageProps) => {
     pricerange,
     offset,
     limit,
+    orderBy,
     categories,
     subcategories,
   });
@@ -36,7 +39,9 @@ const Page = async ({ params, searchParams }: subCategoryPageProps) => {
   return (
     <div className="text-white container mx-auto py-4">
       <div className="flex items-center gap-4">
-        <h1 className="font-koulen text-3xl text-slate-300">{params.category}</h1>
+        <h1 className="font-koulen text-3xl text-slate-300">
+          {params.category}
+        </h1>
         <MoveRight />
         <p className="font-semibold">
           {params.subcategory.slice(0, 1).toLocaleUpperCase() +

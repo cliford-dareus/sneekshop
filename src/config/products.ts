@@ -108,22 +108,35 @@ export const sortOptions = [
   { label: "Price: High to low", value: "price.desc" },
   {
     label: "Alphabetical: A to Z",
-    value: "name.asc",
+    value: "title.asc",
   },
   {
     label: "Alphabetical: Z to A",
-    value: "name.desc",
+    value: "title.desc",
   },
 ];
 
 export const getSubCategories = (category: string) => {
   if (!category) return [];
   const subcategories =
-    ProductCategories.find((c) => c.category === category.toLocaleLowerCase())?.subCategories.map(
-      (s) => ({
-        label: s.title,
-        value: s.slug,
-      })
-    ) ?? [];
-    return subcategories
+    ProductCategories.find(
+      (c) => c.category === category.toLocaleLowerCase()
+    )?.subCategories.map((s) => ({
+      label: s.title,
+      value: s.slug,
+    })) ?? [];
+  return subcategories;
+};
+
+export const formatSortQuery = (sort: string | string[] | undefined) => {
+  const srt = typeof sort === "string" ? sort.split(".") : [];
+  return srt.reduce((acc, item) => {
+    if (item == srt[0]) {
+      acc[item] = "";
+    } else {
+      const key = Object.keys(acc)[0] as string;
+      acc[key] = item;
+    }
+    return acc;
+  }, {} as { [key: string]: string });
 };
