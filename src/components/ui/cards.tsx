@@ -6,6 +6,7 @@ import { ShoppingBasket } from "lucide-react";
 import {Prisma } from "@prisma/client";
 import { addToCard } from "@/app/_actions/cart";
 import Image from "next/image";
+import Badge from "./badge";
 
 type Props = {
   className?: string;
@@ -32,6 +33,7 @@ const Cards = ({ className, item }: Props) => {
       className={classNames("shadow-sm shadow-slate-800 rounded-md", className)}
     >
       <div className="h-[300px] bg-slate-800 rounded-md relative overflow-hidden">
+        <Badge label={item.tags} />
         {imageUrl[0]?.url ? (
           <Image
             src={imageUrl[0].url}

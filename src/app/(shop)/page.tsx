@@ -124,7 +124,9 @@ const LandingPage = async (props: Props) => {
       </section>
 
       <section className="h-[300px] mt-[4em] container">
-        <div className="bg-slate-500 w-full h-full"></div>
+        <div className="bg-slate-500 w-full h-full rounded-md">
+          
+        </div>
       </section>
 
       <section className="container py-4 mt-[4em]">
