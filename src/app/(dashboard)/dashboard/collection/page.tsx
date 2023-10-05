@@ -7,7 +7,6 @@ import Button from "@/components/ui/button";
 import { getServerSession } from "next-auth";
 import { getUserSubscriptionPlan } from "@/app/_actions/stripe";
 import { getSellerStoreProducts } from "@/app/_actions/product";
-import ProductItems from "@/components/productItems";
 import { Product } from "@prisma/client";
 
 type Props = {
@@ -54,22 +53,19 @@ const page = async ({ searchParams }: Props) => {
     <div className="text-white py-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-koulen">Storefront</h1>
+          <h1 className="text-2xl font-koulen">Collections</h1>
           <p>Lorem ipsum dolor sit amet.</p>
         </div>
         {!readyToSell && (
           <Button className="bg-red-600">
-            <Link href="/dashboard/store/new">Add New Product</Link>
+            <Link href="/dashboard/store/new">Add New Collection</Link>
           </Button>
         )}
       </div>
 
       {!readyToSell ? (
         <>
-          <ProductItems
-            pageCount={pageCount}
-            items={storeProducts as Product[]}
-          />
+         {/* Collection here */}
         </>
       ) : (
         <div className="flex items-center justify-center flex-col h-[200px]">

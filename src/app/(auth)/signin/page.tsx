@@ -1,7 +1,5 @@
-
 import LoginForm from "@/components/forms/signinForm";
 import SigninProvidersBtn from "@/components/forms/signinProvidersBtn";
-import next from "next/types";
 
 type Props = {};
 

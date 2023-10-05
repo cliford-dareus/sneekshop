@@ -9,19 +9,18 @@ import type { CartItems } from "@/libs/type";
 export const addToCard = async (item: CartItems) => {
   const cookieStore = cookies();
   const cartId = cookieStore.get("cartId")?.value;
-
-  const cartItems = await prisma.carts.findMany({
-    where: {
-      id: cartId,
-    },
-  });
-
-  if (cartItems.length) {
-    const itemInCart = JSON.parse(cartItems[0]?.items as string) as {
+  
+  if (cartId) {
+    const cartItems = await prisma.carts.findUnique({
+      where: {
+        id: cartId,
+      },
+    });
+    const itemInCart = JSON.parse(cartItems?.items as string) as {
       id: string;
       quantity: number;
     }[];
-
+    
     const cartWithNewItem = itemInCart?.find((i) => i.id === item.id);
     const cartWithOutNewItem = itemInCart.filter((i) => i.id !== item.id);
 

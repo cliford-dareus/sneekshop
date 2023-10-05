@@ -1,7 +1,7 @@
 "use server";
 
-import { InputProps } from "@/components/forms/createProductForm";
 import prisma from "@/libs/prismaDB";
+import { CreateProductProp } from "@/libs/type";
 import { $Enums, Product } from "@prisma/client";
 
 type GetProductsProp = {
@@ -123,7 +123,7 @@ export const isProductUnique = async (input: {
 };
 
 export const createProduct = async (
-  input: Product & { color: string | string[] }
+  input: CreateProductProp & { color: string | string[] }
 ) => {
   const isProductExist = await prisma.product.findFirst({
     where: {
