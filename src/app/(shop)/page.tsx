@@ -23,10 +23,8 @@ const LandingPage = async (props: Props) => {
   const featuredProduct = product.filter((product) =>
     product.tags.includes("FEATURED")
   );
-
-  const url =
-    JSON.parse(product[0]?.images as string)[0]?.url ??
-    "https://utfs.io/f/ffcca2f3-d293-4543-824a-aa752d3fd536_th.jpg";
+  // Initiate hero Image, make sure the image i use an array later
+  const url ="https://utfs.io/f/ffcca2f3-d293-4543-824a-aa752d3fd536_th.jpg";
 
   return (
     <section>

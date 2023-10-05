@@ -9,6 +9,8 @@ const CollectionsPage = (props: Props) => {
         <h1 className="text-3xl font-koulen">Collections</h1>
         <p className="">Lorem ipsum dolor sit amet, adipisicing elit.</p>
       </div>
+      
+      {/*  */}
     </section>
   );
 }
