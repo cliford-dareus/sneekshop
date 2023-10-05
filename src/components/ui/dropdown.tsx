@@ -3,6 +3,7 @@ import { MainNavItem } from "@/config/site";
 import { useState } from "react";
 import DropdownItem from "./dropdownItem";
 import { ShoppingBasket } from "lucide-react";
+import Link from "next/link";
 
 type DropdownProps = {
   items: MainNavItem[];
@@ -33,13 +34,13 @@ function Dropdown({ items, index }: DropdownProps) {
         >
           {index === 0 ? (
             <div className="flex">
-              <div className="min-w-[40px] w-[170px] items-start  bg-red-600 px-4 py-5 flex flex-col justify-center gap-2">
+              <Link href='/' className="min-w-[40px] w-[170px] items-start  bg-red-600 px-4 py-5 flex flex-col justify-center gap-2">
                 <ShoppingBasket size={40} />
                 <span className="font-koulen">SNEEKSHOP</span>
                 <p className="text-[.8rem] leading-none text-left">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </p>
-              </div>
+              </Link>
               <div className="py-5 flex flex-col">
                 {items[index].items?.map((item, i) => (
                   <DropdownItem key={i} item={item} />

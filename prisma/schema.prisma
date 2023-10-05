@@ -86,9 +86,20 @@ model Product {
 
   seller   User   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   sellerId String @db.ObjectId
+
+  collectionIds String[]  @db.ObjectId
+  collections   Collection[] @relation(fields: [collectionIds], references: [id])
   
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+}
+
+model Collection {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+
+  productIds   String[]  @db.ObjectId
+  products     Product[] @relation(fields: [productIds], references: [id])
 }
 
 model Carts {
