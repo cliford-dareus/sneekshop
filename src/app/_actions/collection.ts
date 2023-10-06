@@ -5,7 +5,9 @@ import { $Enums, Product } from "@prisma/client";
 
 type Collection = {};
 
-export const getCollections = async () => {};
+export const getCollection = async () => {
+    
+};
 
 export const getSellerStoreCollections = async (input: {
   sellerId: string;

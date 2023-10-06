@@ -9,6 +9,7 @@ import { getUserSubscriptionPlan } from "@/app/_actions/stripe";
 import { Collection } from "@prisma/client";
 import CollectionItems from "@/components/collectionItems";
 import { getSellerStoreCollections } from "@/app/_actions/collection";
+import { CollectionProp } from "@/libs/type";
 
 type Props = {
   searchParams: {
@@ -17,21 +18,17 @@ type Props = {
 };
 
 const page = async ({ searchParams }: Props) => {
-  const {
-    page,
-    per_page,
-    sort,
-  } = searchParams ?? {};
+  const { page, per_page, sort } = searchParams ?? {};
 
   const session: NextAuthSession | null = await getServerSession(authOptions);
   const subscriptionPlan = await getUserSubscriptionPlan(session);
   const limit = typeof per_page === "string" ? parseInt(per_page) : 8;
   const offset = typeof page === "string" ? (parseInt(page) - 1) * limit : 0;
 
-  const [len, collection] = await getSellerStoreCollections({
+  const [len, collections] = await getSellerStoreCollections({
     sellerId: session?.user.id as string,
     limit,
-    offset
+    offset,
   });
 
   const pageCount = Math.ceil((len as number) / limit);
@@ -60,7 +57,7 @@ const page = async ({ searchParams }: Props) => {
         len ? (
           <>
             <CollectionItems
-              collection={collection as Collection[]}
+              collections={collections as unknown as CollectionProp[]}
               pageCount={pageCount}
             />
           </>

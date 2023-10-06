@@ -1,4 +1,4 @@
-import { $Enums, Prisma } from "@prisma/client";
+import { $Enums, Prisma, Product } from "@prisma/client";
 import { FileWithPath } from "react-dropzone";
 export type CartItems = {
   id: string;
@@ -23,3 +23,11 @@ export interface CreateProductProp {
   tags: string[];
   collectionIds?: string[]; 
 }
+
+export type CollectionProp = {
+  id: string;
+  name: string;
+  sellerId: string;
+  productId: string;
+  products: Product[]
+};
