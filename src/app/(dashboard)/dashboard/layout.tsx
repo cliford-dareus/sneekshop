@@ -26,6 +26,8 @@ const DashboardLayout = async ({ children }: Props) => {
             {/* show these page content only if you have a store */}
             <Link href="/dashboard/store">store</Link>
 
+            <Link href="/dashboard/collection">Collections</Link>
+
             {/* show these page content only if you have */}
             <Link href="/dashboard/sales">Sales</Link>
 

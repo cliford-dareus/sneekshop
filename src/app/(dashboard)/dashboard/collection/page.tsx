@@ -6,8 +6,9 @@ import Link from "next/link";
 import Button from "@/components/ui/button";
 import { getServerSession } from "next-auth";
 import { getUserSubscriptionPlan } from "@/app/_actions/stripe";
-import { getSellerStoreProducts } from "@/app/_actions/product";
-import { Product } from "@prisma/client";
+import { Collection } from "@prisma/client";
+import CollectionItems from "@/components/collectionItems";
+import { getSellerStoreCollections } from "@/app/_actions/collection";
 
 type Props = {
   searchParams: {
@@ -20,26 +21,17 @@ const page = async ({ searchParams }: Props) => {
     page,
     per_page,
     sort,
-    categories,
-    subcategories,
-    price_range,
-    store_ids,
-    store_page,
   } = searchParams ?? {};
 
   const session: NextAuthSession | null = await getServerSession(authOptions);
   const subscriptionPlan = await getUserSubscriptionPlan(session);
   const limit = typeof per_page === "string" ? parseInt(per_page) : 8;
   const offset = typeof page === "string" ? (parseInt(page) - 1) * limit : 0;
-  const pricerange = typeof price_range === "string" ? price_range : null;
 
-  const [len, storeProducts] = await getSellerStoreProducts({
+  const [len, collection] = await getSellerStoreCollections({
     sellerId: session?.user.id as string,
-    categories,
-    subcategories,
-    pricerange,
     limit,
-    offset,
+    offset
   });
 
   const pageCount = Math.ceil((len as number) / limit);
@@ -47,6 +39,7 @@ const page = async ({ searchParams }: Props) => {
   // Check if user is subscribed and subscribe is not expired
   const readyToSell =
     !subscriptionPlan.store_active &&
+    // TODO: Calculate subscription plan expiration date
     subscriptionPlan.stripeCurrentPeriodEnd! > new Date();
 
   return (
@@ -64,9 +57,18 @@ const page = async ({ searchParams }: Props) => {
       </div>
 
       {!readyToSell ? (
-        <>
-         {/* Collection here */}
-        </>
+        len ? (
+          <>
+            <CollectionItems
+              collection={collection as Collection[]}
+              pageCount={pageCount}
+            />
+          </>
+        ) : (
+          <div className="">
+            <h1>No Collection</h1>
+          </div>
+        )
       ) : (
         <div className="flex items-center justify-center flex-col h-[200px]">
           <h1 className="font-koulen text-xl">
