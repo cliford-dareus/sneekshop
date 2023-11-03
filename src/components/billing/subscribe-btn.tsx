@@ -44,8 +44,8 @@ const SubscribeBtn = ({
 
   return (
     <>
-      <form action="" onSubmit={onSubmit}>
-        <Button className="">Subscribe</Button>
+      <form className="w-full flex items-center justify-center" action="" onSubmit={onSubmit}>
+        <Button className="w-full flex items-center justify-center bg-red-500">Subscribe</Button>
       </form>
     </>
   );

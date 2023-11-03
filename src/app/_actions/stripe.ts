@@ -355,8 +355,9 @@ export const createPaymentIntent = async (item: {
           await stripe.paymentIntents.update(
             cart.paymentIntentId,
             {
-              amount: total,
-              application_fee_amount: fee,
+              // Check if those affect checkout process
+              // amount: total,
+              // application_fee_amount: fee,
               metadata,
             },
             {

@@ -47,10 +47,10 @@ const Page = async ({ params }: Props) => {
   }
 
   return (
-    <div className="h-screen container py-4">
+    <div className="h-[100vh+300px] container pt-4 pb-8">
       <h1 className="text-2xl font-koulen">Checkout</h1>
 
-      <div className="flex gap-4 mt-4">
+      <div className="flex gap-4 mt-4 items-start">
         {cartLineItems.length ? (
           <div className="flex-1 py-4 border rounded-md border-slate-800 shadow-md">
             <CartLineItems

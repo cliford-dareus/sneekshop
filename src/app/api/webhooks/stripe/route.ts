@@ -31,28 +31,25 @@ export async function POST(req: Request) {
         session.subscription as string
       );
 
-      await prisma.user.update({
+
+      await prisma.user_subscription.update({
         where: {
-          id: session.metadata?.userId,
+          userId: session.metadata?.userId,
         },
         data: {
-          subscription: {
-            create: {
-              stripeSubscriptionId: subscription.id,
-              stripeCustomerId: subscription.customer as string,
-              stripePriceId: subscription.items.data[0].price.id,
-              stripeCurrentPeriodEnd: new Date(
-                subscription.current_period_end * 1000
-              ),
-            },
-          },
-        },
-        include: {
-          payment: true,
+          stripeSubscriptionId: subscription.id,
+          stripeCustomerId: subscription.customer as string,
+          stripePriceId: subscription.items.data[0].price.id,
+          stripeCurrentPeriodEnd: new Date(
+            subscription.current_period_end * 1000
+          ),
         },
       });
-      console.log("success");
       break;
+    }
+
+    case "customer.subscription.pending_update_expired" : {
+
     }
 
     case "invoice.payment_succeeded": {

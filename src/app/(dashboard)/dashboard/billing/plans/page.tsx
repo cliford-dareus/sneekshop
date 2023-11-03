@@ -5,6 +5,7 @@ import {
 } from "@/app/api/auth/[...nextauth]/route";
 import SubscribeBtn from "@/components/billing/subscribe-btn";
 import { subscriptionPlans } from "@/config/subscription-plans";
+import { Check } from "lucide-react";
 import { getServerSession } from "next-auth";
 import React from "react";
 
@@ -23,11 +24,22 @@ const Plan = async (props: Props) => {
           <div className="grid grid-cols-3 gap-4 mt-4">
             {session &&
               subscriptionPlans.map((plan) => (
-                <div key={plan.id} className="">
-                  <div className="h-[200px] bg-slate-800 rounded-md"></div>
-                  <h3>{plan.name}</h3>
-                  <p>{plan.description}</p>
-                  <p>{plan.price}</p>
+                <div
+                  key={plan.id}
+                  className="p-4 rounded-md shadow-sm shadow-slate-500 flex flex-col h-[500px]"
+                >
+                  <h2 className="font-[600] text-[1.2rem] mb-[.75em]">
+                    {plan.name}
+                  </h2>
+                  <p className="font-[700] text-[2.25rem] mb-[.75em]">
+                    {plan.price}
+                  </p>
+
+                  <div className="mb-auto">
+                    <Check size={30}/>
+                    <p className="mt-[.75em]">{plan.description}</p>
+                  </div>
+
                   <SubscribeBtn
                     userId={session.user?.id}
                     email={session.user.email || ""}

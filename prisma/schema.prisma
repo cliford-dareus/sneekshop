@@ -110,7 +110,7 @@ model Carts {
   id                 String   @id @default(auto()) @map("_id") @db.ObjectId
   clientstripesecret String?
   checkoutsessionId  String?
-  paymentIntentId    String?
+  paymentIntentId    String?  @unique
   items              Json
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
