@@ -5,17 +5,24 @@ import { $Enums, Product } from "@prisma/client";
 
 type Collection = {};
 
-export const getCollection = async (id: string) => {
-  const collection = await prisma.collection.findUnique({
-    where: {
-      id,
-    },
+export const getCollections = async (input: {
+  limit: number;
+  offset: number;
+}) => {
+  const collections = await prisma.collection.findMany({
+    take: input.limit,
+    skip: input.offset,
     include: {
       products: true,
     },
   });
 
-  return collection;
+  const len = await prisma.collection.count({
+    take: input.limit,
+    skip: input.offset
+  })
+
+  return [collections, len];
 };
 
 export const getSellerStoreCollections = async (input: {
@@ -30,9 +37,7 @@ export const getSellerStoreCollections = async (input: {
       sellerId: input.sellerId,
     },
     include: {
-      products: {
-        
-      },
+      products: {},
     },
   });
 

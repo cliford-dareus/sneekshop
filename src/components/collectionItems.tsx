@@ -2,17 +2,17 @@
 
 import Link from "next/link";
 import Pagination from "./pageUI/pagination";
-import { CollectionProp } from "@/libs/type";
+import { CollectionWithProduct } from "@/libs/type";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTransition, useEffect, useState, useCallback } from "react";
 import Button from "./ui/button";
 import { ArrowDownWideNarrow, ChevronDown, ListFilter, X } from "lucide-react";
 import { sortOptions } from "@/config/products";
-
+import Image from "next/image";
 
 type Props = {
   pageCount: number;
-  collections: CollectionProp[];
+  collections: CollectionWithProduct[];
 };
 
 const CollectionItems = ({ collections, pageCount }: Props) => {
@@ -160,15 +160,40 @@ const CollectionItems = ({ collections, pageCount }: Props) => {
       <div className="grid grid-cols-4 gap-4 mt-4">
         {collections.map((collection) => (
           <Link
-            href={`collection/${collection.id}`}
-            className="h-[100px] p-4 relative shadow-md bg-slate-800 rounded-md"
+            href={`collections/${collection.id}`}
+            className="h-[350px] p-4 relative shadow-md bg-slate-800 rounded-md flex flex-col"
             key={collection.id}
           >
-            <h2 className="">{collection.name}</h2>
-            <p>
+            <div className="grid grid-cols-2 grid-rows-2 gap-4 flex-1">
+              {collection.products.slice(0, 4).map((product) => (
+                <div key={product.id} className="relative">
+                  <Image
+                    src={
+                      (
+                        JSON.parse(product.images as string) as {
+                          id: string;
+                          name: string;
+                          url: string;
+                        }[]
+                      )[0].url
+                    }
+                    alt=""
+                    width={50}
+                    height={60}
+                    className="rounded-sm absolute inset-0 w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+            <h2 className="">{collection?.name}</h2>
+            <span className="flex gap-2 text-sm">
               {collection.products.length}{" "}
-              {collection.products.length > 1 ? "Products" : "Product"}
-            </p>
+              {collection.products.length > 1 ? (
+                <p className="">Products</p>
+              ) : (
+                <p className="">Product</p>
+              )}
+            </span>
           </Link>
         ))}
       </div>
