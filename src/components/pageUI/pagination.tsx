@@ -59,7 +59,7 @@ const Pagination = ({
   }, [pageCount, page]);
 
   return (
-    <div className="flex items-center justify-center my-4 ">
+    <div className="flex items-center justify-center my-4">
       <Button
         className="outline outline-1"
         onclick={() => {
@@ -105,7 +105,7 @@ const Pagination = ({
       )}
 
       <Button
-        className=""
+        className="outline outline-1"
         onclick={() => {
           startTransition(() => {
             router.push(

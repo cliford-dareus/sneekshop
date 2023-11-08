@@ -9,7 +9,7 @@ import { getUserSubscriptionPlan } from "@/app/_actions/stripe";
 import { Collection } from "@prisma/client";
 import CollectionItems from "@/components/collectionItems";
 import { getSellerStoreCollections } from "@/app/_actions/collection";
-import { CollectionProp } from "@/libs/type";
+import { CollectionWithProduct } from "@/libs/type";
 
 type Props = {
   searchParams: {
@@ -57,7 +57,7 @@ const page = async ({ searchParams }: Props) => {
         len ? (
           <>
             <CollectionItems
-              collections={collections as unknown as CollectionProp[]}
+              collections={collections as unknown as CollectionWithProduct[]}
               pageCount={pageCount}
             />
           </>

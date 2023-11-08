@@ -178,8 +178,8 @@ const CollectionItems = ({ collections, pageCount }: Props) => {
                       )[0].url
                     }
                     alt=""
-                    width={50}
-                    height={60}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="rounded-sm absolute inset-0 w-full h-full object-cover"
                   />
                 </div>

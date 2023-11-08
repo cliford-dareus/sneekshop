@@ -38,10 +38,10 @@ const Cards = ({ className, item }: Props) => {
           <Image
             src={imageUrl[0].url}
             alt=""
-            width={200}
-            height={300}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="absolute inset-0 h-full w-full object-cover"
-          /> 
+          />
         ) : null}
         <Button
           className="bg-red-600 absolute bottom-4 right-4 rounded-md"

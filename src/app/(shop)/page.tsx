@@ -24,38 +24,41 @@ const LandingPage = async (props: Props) => {
     product.tags.includes("FEATURED")
   );
   // Initiate hero Image, make sure the image i use an array later
-  const url ="https://utfs.io/f/ffcca2f3-d293-4543-824a-aa752d3fd536_th.jpg";
+  const url = "https://utfs.io/f/ffcca2f3-d293-4543-824a-aa752d3fd536_th.jpg";
 
   return (
     <section>
       <section className="max-w-[64rem] mx-auto h-[70vh] flex flex-col justify-center items-center">
-        <div className="flex flex-col items-center justify-center gap-2 ">
+        <p>Lorem ipsum dolor sit amet consectetur.</p>
+        <div className="flex flex-col items-center justify-center">
           <div className="text-6xl text-center font-koulen flex items-center gap-2">
-            <h1>UPGRAGE YOUR STYLE GAME </h1>
-            <div className="w-[200px] h-[80px] bg-pink-300 rounded-full relative overflow-hidden">
+            <h1 className="leading-[.6]">UPGRAGE YOUR STYLE GAME </h1>
+            <div className="w-[200px] h-[60px] bg-pink-300 rounded-full relative overflow-hidden">
               <Image
                 src={url}
                 alt=""
-                width={200}
-                height={80}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="absolute inset-0 w-full h-full object-cover"
               />
             </div>
           </div>
           <div className="text-6xl text-center font-koulen flex items-center gap-2">
-            <h1>WITH OUR TRENDY</h1>{" "}
-            <div className="w-[200px] h-[80px] bg-pink-300 rounded-full relative overflow-hidden">
+            <h1 className="leading-[.6]">WITH OUR TRENDY</h1>{" "}
+            <div className="w-[200px] h-[60px] bg-pink-300 rounded-full relative overflow-hidden">
               <Image
                 src={url}
                 alt=""
-                width={200}
-                height={80}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="absolute inset-0 w-full h-full object-cover"
               />
             </div>{" "}
-            <span>AND AFFORDADLE</span>
+            <span className="leading-[.6]">AND AFFORDADLE</span>
           </div>
-          <h1 className="text-6xl text-center font-koulen">CLOTHING!</h1>
+          <h1 className="text-6xl text-center font-koulen leading-[.6] mt-3">
+            CLOTHING!
+          </h1>
         </div>
 
         <div className="flex gap-8 mt-8">
@@ -86,7 +89,7 @@ const LandingPage = async (props: Props) => {
                 <path
                   d="M0 13C3.70732 13 28.2114 13 40 13L27.3171 3"
                   stroke="white"
-                  stroke-width="6"
+                  strokeWidth="6"
                 />
               </svg>
             </div>
@@ -115,7 +118,7 @@ const LandingPage = async (props: Props) => {
               <path
                 d="M0 13C3.70732 13 28.2114 13 40 13L27.3171 3"
                 stroke="white"
-                stroke-width="6"
+                strokeWidth="6"
               />
             </svg>
           </div>
@@ -162,10 +165,13 @@ const LandingPage = async (props: Props) => {
       <section className="container py-4 my-[4em] ">
         <h2 className="text-3xl font-koulen">FEATURED SELLERS</h2>
         <p className="">Lorem ipsum dolor sit amet consectetur.</p>
-        
+
         <div className="grid grid-cols-4 gap-4 w-full h-[100px] mt-4">
           {[1, 2, 3, 4].map((seller) => (
-            <div className=" h-[100px] bg-slate-700 rounded-md" key={seller}></div>
+            <div
+              className=" h-[100px] bg-slate-700 rounded-md"
+              key={seller}
+            ></div>
           ))}
         </div>
 

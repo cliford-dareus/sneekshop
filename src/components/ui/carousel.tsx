@@ -50,7 +50,7 @@ const Carousel = ({ items }: Props) => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M50.5 13H10L24 3" stroke="white" stroke-width="6" />
+            <path d="M50.5 13H10L24 3" stroke="white" strokeWidth="6" />
           </svg>
         </Button>
 
@@ -68,7 +68,7 @@ const Carousel = ({ items }: Props) => {
             <path
               d="M0 13C3.70732 13 28.2114 13 40 13L27.3171 3"
               stroke="white"
-              stroke-width="6"
+              strokeWidth="6"
             />
           </svg>
         </Button>
